@@ -1,0 +1,32 @@
+{
+"expo": {
+  "name": "Comandas",
+  "slug": "comandas-app",
+  "version": "1.0.0",
+  "orientation": "default",
+  "scheme": "comandas",
+  "userInterfaceStyle": "light",
+  "newArchEnabled": true,
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.quieromesa.comandas"
+  },
+  "android": {
+    "adaptiveIcon": {
+      "backgroundColor": "#F97316"
+    },
+    "package": "com.quieromesa.comandas"
+  },
+  "web": {
+    "bundler": "metro",
+    "output": "static",
+    "favicon": "./assets/favicon.png"
+  },
+  "plugins": [
+    "expo-router"
+  ],
+  "experiments": {
+    "typedRoutes": true
+  }
+}
+}
