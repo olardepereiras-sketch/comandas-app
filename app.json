@@ -31,7 +31,7 @@
       "kotlinVersion": "2.0.21",
       "compileSdkVersion": 35,
       "targetSdkVersion": 34,
-      "minSdkVersion": 23,
+      "minSdkVersion": 24,
       "gradleVersion": "8.9",
       "androidGradlePluginVersion": "8.2.2",
       "enableProguardInReleaseBuilds": false,
