@@ -6,9 +6,9 @@ import type { AppRouter } from '../../backend/trpc/app-router';
 export type { AppRouter };
 export const trpc = createTRPCReact<AppRouter>();
 
-// ✅ URL segura para nativo: SIN espacios, SIN acceso a window.location
+// ✅ Función 100% segura para nativo: NUNCA accede a window.location
 const getApiUrl = (): string => {
-  // Priority 1: Environment variable (con trim para seguridad)
+  // Priority 1: Environment variable (con trim para eliminar espacios)
   const envUrl = process.env.EXPO_PUBLIC_COMANDAS_API_URL;
   if (typeof envUrl === 'string' && envUrl.trim().length > 0) {
     return envUrl.trim();
