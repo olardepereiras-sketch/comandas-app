@@ -1,14 +1,17 @@
 {
   "cli": {
-    "version": ">= 18.1.0",
-    "appVersionSource": "remote"
+    "version": ">= 10.0.0"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
+      },
       "env": {
-        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
+        "EXPO_PUBLIC_COMANDAS_API_URL": "http://200.234.236.133:3001"
       }
     },
     "preview": {
@@ -17,16 +20,15 @@
         "buildType": "apk"
       },
       "env": {
-        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
+        "EXPO_PUBLIC_COMANDAS_API_URL": "http://200.234.236.133:3001"
       }
     },
     "production": {
-      "autoIncrement": true,
       "android": {
         "buildType": "apk"
       },
       "env": {
-        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
+        "EXPO_PUBLIC_COMANDAS_API_URL": "http://200.234.236.133:3001"
       }
     }
   },
