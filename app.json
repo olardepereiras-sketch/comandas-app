@@ -25,27 +25,27 @@
     "plugins": [
       "expo-router",
       [
-        "expo-build-properties",
-        {
-          "android": {
-            "kotlinVersion": "2.0.21",
-            "compileSdkVersion": 34,
-            "targetSdkVersion": 34,
-            "minSdkVersion": 23,
-            "gradleVersion": "8.9",
-            "androidGradlePluginVersion": "8.2.2",
-            "enableProguardInReleaseBuilds": false,
-            "enableShrinkResourcesInReleaseBuilds": false,
-            "usesCleartextTraffic": true,
-            "gradleProperties": {
-              "org.gradle.jvmargs": "-Xmx4g -XX:MaxMetaspaceSize=1g"
-            }
-          },
-          "ios": {
-            "deploymentTarget": "15.1"
-          }
-        }
-      ],
+  "expo-build-properties",
+  {
+    "android": {
+      "kotlinVersion": "2.0.21",
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 34,
+      "minSdkVersion": 23,
+      "gradleVersion": "8.9",
+      "androidGradlePluginVersion": "8.2.2",
+      "enableProguardInReleaseBuilds": false,
+      "enableShrinkResourcesInReleaseBuilds": false,
+      "usesCleartextTraffic": true,
+      "gradleProperties": {
+        "org.gradle.jvmargs": "-Xmx4g -XX:MaxMetaspaceSize=1g"
+      }
+    },
+    "ios": {
+      "deploymentTarget": "15.1"
+    }
+  }
+],
       "expo-font"
     ],
     "extra": {
