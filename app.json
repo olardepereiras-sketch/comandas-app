@@ -2,20 +2,20 @@
   "expo": {
     "name": "Comandas",
     "slug": "comandas-app",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "default",
     "scheme": "comandas",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.quieromesa.comandas"
     },
     "android": {
+      "package": "com.quieromesa.comandas",
       "adaptiveIcon": {
         "backgroundColor": "#F97316"
-      },
-      "package": "com.quieromesa.comandas"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -24,11 +24,30 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.0.21",
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 23,
+            "gradleVersion": "8.9",
+            "androidGradlePluginVersion": "8.2.2",
+            "enableProguardInReleaseBuilds": false,
+            "enableShrinkResourcesInReleaseBuilds": false,
+            "usesCleartextTraffic": true,
+            "gradleProperties": {
+              "org.gradle.jvmargs": "-Xmx4g -XX:MaxMetaspaceSize=1g"
+            }
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
       "expo-font"
     ],
-    "experiments": {
-      "typedRoutes": true
-    },
     "extra": {
       "router": {
         "origin": false
@@ -37,6 +56,8 @@
         "projectId": "0fb6db0e-40da-4b45-b1d0-d283ab73fd19"
       }
     },
-    "owner": "marcosreboredo"
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
