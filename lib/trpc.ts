@@ -1,28 +1,47 @@
-import { createTRPCReact } from '@trpc/react-query';
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import { Platform } from 'react-native';
-import type { AppRouter } from '../../backend/trpc/app-router';
+import { createTRPCReact } from "@trpc/react-query";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { Platform } from "react-native";
+// ✅ Ajusta esta ruta según tu estructura real:
+import type { AppRouter } from "../../backend/trpc/app-router";
 
 export type { AppRouter };
 export const trpc = createTRPCReact<AppRouter>();
 
-// ✅ Función 100% segura para nativo: NUNCA accede a window.location
-const getApiUrl = (): string => {
-  // Priority 1: Environment variable (con trim para eliminar espacios)
+// ✅ Función 100% segura para nativo: NUNCA accede a window.location en Android/iOS
+const getBaseUrl = (): string => {
+  // Priority 1: Environment variable (con trim para eliminar espacios accidentales)
   const envUrl = process.env.EXPO_PUBLIC_COMANDAS_API_URL;
-  if (typeof envUrl === 'string' && envUrl.trim().length > 0) {
+  if (typeof envUrl === "string" && envUrl.trim().length > 0) {
     return envUrl.trim();
   }
-  
-  // Priority 2: Fallback HARDCODED para producción (NATIVO)
+
+  // Priority 2: Web browser ONLY (con validación estricta)
+  if (
+    Platform.OS === "web" &&
+    typeof window !== "undefined" &&
+    window.location &&
+    typeof window.location.origin === "string" &&
+    window.location.origin.length > 0
+  ) {
+    return window.location.origin;
+  }
+
+  // Priority 3: Fallback HARDCODED para producción (NATIVO)
   // Esto NUNCA usa window.location - seguro para Android/iOS
-  return 'https://quieromesa.com';
+  return "https://quieromesa.com";
 };
 
 const linkConfig = httpBatchLink({
-  url: `${getApiUrl()}/api/trpc`,  // ✅ URL limpia sin espacios
-  headers: () => ({ 'Content-Type': 'application/json' }),
+  url: `${getBaseUrl()}/api/trpc`,  // ✅ URL limpia sin espacios
+  headers: () => ({
+    "Content-Type": "application/json",
+  }),
 });
 
-export const trpcClient = trpc.createClient({ links: [linkConfig] });
-export const vanillaClient = createTRPCClient<AppRouter>({ links: [linkConfig] });
+export const trpcClient = trpc.createClient({
+  links: [linkConfig],
+});
+
+export const vanillaClient = createTRPCClient<AppRouter>({
+  links: [linkConfig],
+});
