@@ -1,47 +1,46 @@
 import { createTRPCReact } from "@trpc/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { Platform } from "react-native";
-// ✅ Ajusta esta ruta según tu estructura real:
 import type { AppRouter } from "../../backend/trpc/app-router";
 
 export type { AppRouter };
 export const trpc = createTRPCReact<AppRouter>();
 
-// ✅ Función 100% segura para nativo: NUNCA accede a window.location en Android/iOS
-const getBaseUrl = (): string => {
-  // Priority 1: Environment variable (con trim para eliminar espacios accidentales)
+// ✅ Función que determina la URL correcta según la ruta
+const getApiUrl = (path?: string): string => {
   const envUrl = process.env.EXPO_PUBLIC_COMANDAS_API_URL;
-  if (typeof envUrl === "string" && envUrl.trim().length > 0) {
-    return envUrl.trim();
+  const baseUrl = typeof envUrl === "string" && envUrl.trim().length > 0 
+    ? envUrl.trim() 
+    : "https://quieromesa.com";
+  
+  // Rutas del backend de comandas (separado) → usar /comandas-api/trpc
+  if (path && (
+    path.startsWith("comandas.listOrders") ||
+    path.startsWith("comandas.createOrder") ||
+    path.startsWith("comandas.updateOrder") ||
+    path.startsWith("comandas.addItem") ||
+    path.startsWith("comandas.removeItem") ||
+    path.startsWith("comandas.updateItem") ||
+    path.startsWith("comandas.getOrder") ||
+    path.startsWith("comandas.closeOrder")
+  )) {
+    return `${baseUrl}/comandas-api/trpc`;
   }
-
-  // Priority 2: Web browser ONLY (con validación estricta)
-  if (
-    Platform.OS === "web" &&
-    typeof window !== "undefined" &&
-    window.location &&
-    typeof window.location.origin === "string" &&
-    window.location.origin.length > 0
-  ) {
-    return window.location.origin;
-  }
-
-  // Priority 3: Fallback HARDCODED para producción (NATIVO)
-  // Esto NUNCA usa window.location - seguro para Android/iOS
-  return "https://quieromesa.com";
+  
+  // Rutas del backend principal → usar /api/trpc
+  return `${baseUrl}/api/trpc`;
 };
 
-const linkConfig = httpBatchLink({
-  url: `${getBaseUrl()}/api/trpc`,  // ✅ URL limpia sin espacios
-  headers: () => ({
-    "Content-Type": "application/json",
-  }),
-});
+// Cliente base para queries/mutations
+export const createTrpcLink = (path?: string) => 
+  httpBatchLink({
+    url: getApiUrl(path),
+    headers: () => ({ "Content-Type": "application/json" }),
+  });
 
 export const trpcClient = trpc.createClient({
-  links: [linkConfig],
+  links: [createTrpcLink()],
 });
 
 export const vanillaClient = createTRPCClient<AppRouter>({
-  links: [linkConfig],
+  links: [createTrpcLink()],
 });
