@@ -567,7 +567,7 @@ export default function PrintersScreen() {
               </TouchableOpacity>
             </View>
 
-            {form.connectionType === 'ip' && (
+            {(form.connectionType === 'ip' || form.connectionType === 'usb-agent') && (
               <View style={styles.hintBox}>
                 <Text style={styles.hintText}>
                   💡 Puerto <Text style={styles.hintBold}>9100</Text> es el estándar para impresoras ESC/POS (Epson, Star, Bixolon, etc.).{'\n'}
