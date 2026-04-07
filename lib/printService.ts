@@ -117,10 +117,32 @@ function uint8ArrayToBase64(data: Uint8Array): string {
   return btoa(binary);
 }
 
+async function sendToPrinterAgent(
+  ip: string,
+  port: number,
+  printerName: string,
+  data: Uint8Array,
+): Promise<void> {
+  console.log(`[Print] Enviando a Agente Windows ${ip}:${port} impresora="${printerName}" (${data.length} bytes)`);
+  const header = `PRINTER:${printerName}\n`;
+  const headerBytes = new TextEncoder().encode(header);
+  const combined = new Uint8Array(headerBytes.length + data.length);
+  combined.set(headerBytes, 0);
+  combined.set(data, headerBytes.length);
+  await sendToPrinterTCP(ip, port, combined);
+}
+
 async function sendToPrinter(printer: PrinterConfig, data: Uint8Array): Promise<void> {
   const connType = printer.connectionType ?? 'ip';
   if (connType === 'usb') {
     await sendToPrinterUSB(printer.usbPath ?? '/dev/usb/lp0', data);
+  } else if (connType === 'usb-agent') {
+    await sendToPrinterAgent(
+      printer.ip,
+      printer.port ?? 9100,
+      printer.agentPrinterName ?? '',
+      data,
+    );
   } else {
     await sendToPrinterTCP(printer.ip, printer.port ?? 9100, data);
   }

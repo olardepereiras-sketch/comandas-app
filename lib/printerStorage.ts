@@ -3,10 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export interface PrinterConfig {
   id: string;
   name: string;
-  connectionType: 'ip' | 'usb';
+  connectionType: 'ip' | 'usb' | 'usb-agent';
   ip: string;
   port: number;
   usbPath: string;
+  agentPrinterName: string;
   width: number;
   type: 'cocina' | 'barra' | 'otro';
   enabled: boolean;
@@ -24,6 +25,7 @@ export async function getPrinters(): Promise<PrinterConfig[]> {
       ...p,
       connectionType: p.connectionType ?? 'ip',
       usbPath: p.usbPath ?? '/dev/usb/lp0',
+      agentPrinterName: p.agentPrinterName ?? '',
     }));
   } catch (err) {
     console.error('[PrinterStorage] Error reading printers:', err);
