@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Gestión de Reservas — QuieroMesa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --primary: #7C3AED;
+    --primary-light: #EDE9FE;
+    --accent: #10B981;
+    --accent-light: #D1FAE5;
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+    --danger: #EF4444;
+    --danger-light: #FEE2E2;
+    --info: #3B82F6;
+    --info-light: #EFF6FF;
+    --text: #111827;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --bg: #F9FAFB;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* COVER PAGE */
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1E0E4E 0%, #7C3AED 50%, #4F46E5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    text-align: center;
+    page-break-after: always;
+  }
+
+  .cover-logo {
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin-bottom: 32px;
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+
+  .cover-brand {
+    font-size: 13px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+
+  .cover-title {
+    font-size: 42px; font-weight: 800; color: #fff;
+    line-height: 1.2; margin-bottom: 16px;
+  }
+
+  .cover-subtitle {
+    font-size: 18px; color: rgba(255,255,255,0.75);
+    max-width: 500px; margin-bottom: 48px;
+  }
+
+  .cover-modules {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; max-width: 600px;
+  }
+
+  .cover-module-tag {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff; padding: 6px 14px;
+    border-radius: 20px; font-size: 12px; font-weight: 500;
+  }
+
+  .cover-version {
+    margin-top: 60px;
+    font-size: 12px; color: rgba(255,255,255,0.4);
+  }
+
+  /* LAYOUT */
+  .page-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 48px;
+  }
+
+  /* TABLE OF CONTENTS */
+  .toc-page {
+    page-break-after: always;
+    padding: 48px 0;
+  }
+
+  .toc-title {
+    font-size: 28px; font-weight: 800; color: var(--primary);
+    margin-bottom: 8px;
+  }
+
+  .toc-divider {
+    width: 60px; height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 2px; margin-bottom: 36px;
+  }
+
+  .toc-list { list-style: none; }
+
+  .toc-chapter {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+
+  .toc-chapter-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 8px; text-decoration: none; color: var(--text);
+    transition: background 0.15s;
+  }
+
+  .toc-chapter-link:hover { background: var(--bg); border-radius: 8px; }
+
+  .toc-num {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--primary-light); color: var(--primary);
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .toc-name { flex: 1; font-size: 15px; font-weight: 600; }
+
+  .toc-dots {
+    flex: 1; border-bottom: 2px dotted var(--border);
+    height: 1px; margin: 0 8px;
+  }
+
+  .toc-page-num { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+  /* CHAPTER HEADER */
+  .chapter {
+    page-break-before: always;
+    padding-top: 32px;
+  }
+
+  .chapter-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary-light); color: var(--primary);
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+
+  .chapter-title {
+    font-size: 32px; font-weight: 800;
+    color: var(--text); margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .chapter-lead {
+    font-size: 16px; color: var(--text-muted);
+    max-width: 640px; margin-bottom: 32px; line-height: 1.6;
+  }
+
+  .chapter-divider {
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent), transparent);
+    border-radius: 2px; margin-bottom: 36px;
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 40px; }
+
+  .section-title {
+    font-size: 18px; font-weight: 700;
+    color: var(--primary); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 4px; height: 18px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  .subsection { margin-bottom: 24px; }
+
+  .subsection-title {
+    font-size: 15px; font-weight: 600;
+    color: var(--text); margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* STEPS */
+  .steps { list-style: none; margin-bottom: 16px; }
+
+  .steps li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid #F3F4F6;
+  }
+
+  .steps li:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--primary); color: #fff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  .step-text { font-size: 14px; line-height: 1.6; }
+
+  /* BULLETS */
+  .bullets { list-style: none; margin-bottom: 16px; }
+
+  .bullets li {
+    padding: 6px 0 6px 20px;
+    position: relative; font-size: 14px; line-height: 1.6;
+  }
+
+  .bullets li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--primary); font-weight: 700;
+  }
+
+  /* TABLE */
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    margin-bottom: 20px; border-radius: 10px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .data-table th {
+    background: var(--primary); color: #fff;
+    padding: 10px 14px; text-align: left;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .data-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    font-size: 13px; vertical-align: top;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .data-table tr:nth-child(even) td { background: var(--bg); }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-radius: 10px; padding: 16px 20px;
+    margin-bottom: 20px; display: flex; gap: 12px;
+  }
+
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+
+  .callout-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .callout-body p { font-size: 13px; margin-bottom: 0; }
+
+  .callout.tip { background: var(--accent-light); border-left: 4px solid var(--accent); }
+  .callout.tip .callout-body h4 { color: #065F46; }
+  .callout.tip .callout-body p { color: #047857; }
+
+  .callout.warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .callout.warning .callout-body h4 { color: #92400E; }
+  .callout.warning .callout-body p { color: #B45309; }
+
+  .callout.info { background: var(--info-light); border-left: 4px solid var(--info); }
+  .callout.info .callout-body h4 { color: #1E40AF; }
+  .callout.info .callout-body p { color: #2563EB; }
+
+  .callout.danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .callout.danger .callout-body h4 { color: #991B1B; }
+  .callout.danger .callout-body p { color: #B91C1C; }
+
+  /* SCREENSHOT PLACEHOLDER */
+  .screenshot {
+    background: var(--bg);
+    border: 2px dashed var(--border);
+    border-radius: 12px; padding: 0;
+    margin: 20px 0; overflow: hidden;
+  }
+
+  .screenshot-bar {
+    background: #E5E7EB; padding: 8px 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .screenshot-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  .screenshot-url {
+    flex: 1; background: #fff;
+    border-radius: 4px; padding: 3px 10px;
+    font-size: 11px; color: var(--text-muted);
+    margin-left: 8px;
+  }
+
+  .screenshot-content {
+    padding: 20px 24px; min-height: 160px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; gap: 8px;
+  }
+
+  .screenshot-label {
+    font-size: 13px; font-weight: 600; color: #9CA3AF;
+  }
+
+  .screenshot-desc {
+    font-size: 11px; color: #D1D5DB; max-width: 400px;
+  }
+
+  /* MOCKUP UI elements */
+  .ui-mockup {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .ui-mockup-title {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--primary); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .ui-mockup-title::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--primary-light);
+  }
+
+  /* STATUS BADGES */
+  .badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-yellow { background: #FEF3C7; color: #92400E; }
+  .badge-blue { background: #DBEAFE; color: #1E40AF; }
+  .badge-gray { background: #F3F4F6; color: #374151; }
+  .badge-red { background: #FEE2E2; color: #991B1B; }
+  .badge-purple { background: #EDE9FE; color: #5B21B6; }
+
+  /* COLOR LEGEND */
+  .color-legend {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-bottom: 16px;
+  }
+
+  .color-legend-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg); border-radius: 8px;
+    padding: 8px 12px;
+  }
+
+  .color-swatch {
+    width: 32px; height: 20px; border-radius: 4px;
+    flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .color-legend-text { font-size: 13px; }
+
+  /* PRINT */
+  @media print {
+    body { font-size: 12px; }
+    .cover { height: 100vh; }
+    .chapter { page-break-before: always; }
+    a { text-decoration: none; color: inherit; }
+    .screenshot { break-inside: avoid; }
+    .callout { break-inside: avoid; }
+    table { break-inside: avoid; }
+    @page { margin: 20mm; }
+  }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--primary); color: #fff;
+    border: none; padding: 12px 24px;
+    border-radius: 50px; font-size: 14px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+    z-index: 100; display: flex; align-items: center; gap: 8px;
+  }
+
+  .print-btn:hover { background: #6D28D9; }
+
+  @media print { .print-btn { display: none; } }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">
+  🖨️ Exportar PDF
+</button>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">📋</div>
+  <div class="cover-brand">QuieroMesa · Sistema de Gestión</div>
+  <h1 class="cover-title">Manual de Gestión<br>de Reservas</h1>
+  <p class="cover-subtitle">Guía completa para gestionar reservas, mesas, horarios, clientes VIP y notificaciones WhatsApp</p>
+  <div class="cover-modules">
+    <span class="cover-module-tag">📅 Planning de Hoy</span>
+    <span class="cover-module-tag">📋 Reservas Pro</span>
+    <span class="cover-module-tag">🪑 Mesas</span>
+    <span class="cover-module-tag">🕐 Horarios</span>
+    <span class="cover-module-tag">⭐ Valoraciones + VIP</span>
+    <span class="cover-module-tag">⚙️ Configuración</span>
+    <span class="cover-module-tag">📱 Configuración Pro</span>
+    <span class="cover-module-tag">🍳 Juego del Chef</span>
+  </div>
+  <div class="cover-version">v2.0 · 2026 · quieromesa.com</div>
+</div>
+
+<div class="page-wrapper">
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc-page">
+  <h2 class="toc-title">Índice de Contenidos</h2>
+  <div class="toc-divider"></div>
+  <ul class="toc-list">
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">1</span><span class="toc-name">Acceso al Sistema y Configuración Inicial</span><span class="toc-dots"></span><span class="toc-page-num">3</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">2</span><span class="toc-name">Planning de Hoy</span><span class="toc-dots"></span><span class="toc-page-num">5</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">3</span><span class="toc-name">Reservas Pro</span><span class="toc-dots"></span><span class="toc-page-num">10</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">4</span><span class="toc-name">Mesas</span><span class="toc-dots"></span><span class="toc-page-num">13</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">5</span><span class="toc-name">Horarios</span><span class="toc-dots"></span><span class="toc-page-num">15</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">6</span><span class="toc-name">Valoraciones + VIP</span><span class="toc-dots"></span><span class="toc-page-num">17</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">7</span><span class="toc-name">Configuración del Restaurante</span><span class="toc-dots"></span><span class="toc-page-num">19</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">8</span><span class="toc-name">Configuración Pro – WhatsApp</span><span class="toc-dots"></span><span class="toc-page-num">21</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">9</span><span class="toc-name">Juego del Chef</span><span class="toc-dots"></span><span class="toc-page-num">23</span></div></li>
+  </ul>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 1</div>
+  <h1 class="chapter-title">Acceso al Sistema y Configuración Inicial</h1>
+  <p class="chapter-lead">Antes de empezar a tomar reservas, configure los datos esenciales de su restaurante siguiendo este orden.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">1.1 Inicio de Sesión</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>https://quieromesa.com/restaurant</strong> en cualquier navegador.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Introduzca el <strong>correo electrónico</strong> y <strong>contraseña</strong> proporcionados al registrar el restaurante.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Pulse <strong>Entrar</strong>. Accederá al panel principal con el menú lateral de módulos.</span></li>
+    </ol>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant</div>
+      </div>
+      <div class="screenshot-content">
+        <span style="font-size:36px">🔐</span>
+        <span class="screenshot-label">Pantalla de inicio de sesión</span>
+        <span class="screenshot-desc">Campo de email + contraseña con botón "Entrar". Fondo con gradiente morado corporativo.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">1.2 Orden de Configuración Inicial Recomendado</h2>
+    <p>La primera vez que acceda al sistema, siga este orden para que todo funcione correctamente:</p>
+
+    <div class="ui-mockup">
+      <div class="ui-mockup-title">Flujo de configuración inicial</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span class="step-text"><strong>Configuración</strong> → Datos del restaurante (nombre, descripción, teléfono, imagen, opciones de tronas/carrito/mascotas)</span></li>
+        <li><span class="step-num">2</span><span class="step-text"><strong>Configuración</strong> → Ubicaciones (crear salas: Comedor, Terraza, Barra…)</span></li>
+        <li><span class="step-num">3</span><span class="step-text"><strong>Horarios</strong> → Definir días abiertos y turnos con sus franjas horarias y límites de comensales</span></li>
+        <li><span class="step-num">4</span><span class="step-text"><strong>Mesas</strong> → Crear las mesas con su capacidad, tronas, tiempo de rotación y ubicación</span></li>
+        <li><span class="step-num">5</span><span class="step-text"><strong>Configuración Pro</strong> → Vincular WhatsApp Web para notificaciones automáticas</span></li>
+        <li><span class="step-num">6</span><span class="step-text">¡Listo! La página pública ya está disponible en <strong>quieromesa.com/client/[su-restaurante]</strong></span></li>
+      </ol>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body">
+        <h4>Consejo</h4>
+        <p>Configure primero las ubicaciones y horarios ANTES de crear las mesas. Las mesas necesitan estar asignadas a una ubicación y los horarios determinan cuándo pueden reservarse.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 2</div>
+  <h1 class="chapter-title">Planning de Hoy</h1>
+  <p class="chapter-lead">El corazón operativo del sistema. Visualice en tiempo real el estado de todas las mesas para cada turno del día.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">2.1 Navegación y Selección de Turno</h2>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant/planning-today</div>
+      </div>
+      <div class="screenshot-content" style="min-height:200px; flex-direction:row; gap:24px; text-align:left; align-items:flex-start; padding:24px">
+        <div style="flex:1">
+          <div style="background:#7C3AED;border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;gap:8px;align-items:center">
+            <div style="background:rgba(255,255,255,0.2);border-radius:6px;padding:4px 12px;font-size:11px;color:#fff;font-weight:600">Comida 13:30–15:30</div>
+            <div style="background:rgba(255,255,255,0.1);border-radius:6px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.7)">Cena 20:00–23:00</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">
+            <div style="border:1px solid #e5e7eb;border-radius:6px;padding:4px 8px;font-size:11px">‹</div>
+            <div style="background:#7C3AED;border-radius:6px;padding:4px 10px;font-size:11px;color:#fff">Hoy</div>
+            <div style="border:1px solid #e5e7eb;border-radius:6px;padding:4px 8px;font-size:11px">›</div>
+            <div style="font-size:11px;font-weight:600">Lunes 09/03/2026</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px">
+            <div style="background:#D1FAE5;border:1px solid #10B981;border-radius:6px;padding:8px;font-size:10px">
+              <div style="font-weight:700">Mesa 1</div>
+              <div style="color:#065F46">21:00 · 4 pax</div>
+              <div style="font-size:9px;color:#10B981">Confirmada</div>
+            </div>
+            <div style="background:#E5E7EB;border-radius:6px;padding:8px;font-size:10px">
+              <div style="font-weight:700">Mesa 2</div>
+              <div style="color:#6B7280;font-size:9px;margin-top:4px">LIBRE</div>
+            </div>
+            <div style="background:#059669;border-radius:6px;padding:8px;font-size:10px">
+              <div style="font-weight:700;color:#fff">Mesa 3</div>
+              <div style="color:rgba(255,255,255,0.8);font-size:9px">En Curso</div>
+            </div>
+            <div style="background:#FEE2E2;border:1px solid #EF4444;border-radius:6px;padding:8px;font-size:10px">
+              <div style="font-weight:700">Mesa 4</div>
+              <div style="color:#991B1B;font-size:9px">BLOQUEADA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="bullets">
+      <li>Use las flechas <strong>‹ ›</strong> de la barra superior para avanzar o retroceder un día.</li>
+      <li>Pulse <strong>Hoy</strong> para volver a la fecha actual.</li>
+      <li>Los botones de turno (ej: <em>Comida</em>, <em>Cena</em>) aparecen arriba. El sistema selecciona automáticamente el turno más próximo a la hora actual.</li>
+      <li>Use el botón <strong>Refrescar</strong> para forzar la recarga. El planning se actualiza automáticamente cada 10 segundos.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.2 Tabla de Horarios del Turno</h2>
+    <p>Debajo del selector de turno encontrará la tabla de horarios con tres columnas:</p>
+
+    <table class="data-table">
+      <thead><tr><th>Columna</th><th>Descripción</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Máximos</strong></td><td>Comensales máximos permitidos en ese slot de 30 minutos</td><td>Pulse el número para editarlo al instante</td></tr>
+        <tr><td><strong>Reservas</strong></td><td>Comensales ya reservados para ese horario</td><td>Solo lectura</td></tr>
+        <tr><td><strong>Libres</strong></td><td>Plazas disponibles = Máximos − Reservas</td><td>Solo lectura</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout tip">
+      <span class="callout-icon">✏️</span>
+      <div class="callout-body">
+        <h4>Modificar el máximo de comensales de un slot</h4>
+        <p>Pulse sobre el número "max" del horario → escriba el nuevo valor → pulse Guardar. El cambio queda registrado en la excepción del día y no afecta al resto de días.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.3 Colores del Plano de Mesas</h2>
+    <div class="color-legend">
+      <div class="color-legend-item"><div class="color-swatch" style="background:#E5E7EB"></div><div class="color-legend-text"><strong>Gris</strong> — Mesa libre</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#D1FAE5;border:2px solid #10B981"></div><div class="color-legend-text"><strong>Verde claro</strong> — Confirmada</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#059669"></div><div class="color-legend-text"><strong>Verde oscuro</strong> — En Curso</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#FEF3C7;border:2px solid #F59E0B"></div><div class="color-legend-text"><strong>Amarillo</strong> — Pendiente</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#FDF2F8;border:2px solid #EC4899"></div><div class="color-legend-text"><strong>Rosa</strong> — Valorable</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#FEE2E2;border:2px solid #EF4444"></div><div class="color-legend-text"><strong>Rojo</strong> — Bloqueada</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#E5E7EB;border:2px solid #F59E0B"></div><div class="color-legend-text"><strong>Borde naranja</strong> — Libre a partir de HH:MM</div></div>
+      <div class="color-legend-item"><div class="color-swatch" style="background:#F3E8EF;border:2px solid #C9A0B4"></div><div class="color-legend-text"><strong>Lila</strong> — Finalizada</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.4 Acciones sobre una Mesa Libre</h2>
+    <p>Al pulsar una mesa libre se abre el menú de opciones:</p>
+
+    <table class="data-table">
+      <thead><tr><th>Opción</th><th>¿Qué hace?</th></tr></thead>
+      <tbody>
+        <tr><td>➕ <strong>Añadir Reserva</strong></td><td>Abre el formulario de reserva rápida con la mesa, turno y ubicación preseleccionados.</td></tr>
+        <tr><td>🔒 <strong>Bloquear Mesa</strong></td><td>Bloquea la mesa N minutos. También permite crear una reserva "sin cita previa" (walk-in) con nombre, teléfono, comensales y hora.</td></tr>
+        <tr><td>✂️ <strong>Dividir Mesa</strong></td><td>Divide temporalmente la mesa en dos submesas A y B con capacidades personalizadas para este turno.</td></tr>
+        <tr><td>🔗 <strong>Agrupar Mesa</strong></td><td>Selecciona primero el horario deseado y luego elige las mesas a unir (incluye mesas con tiempo de rotación disponible).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.5 Acciones sobre una Mesa con Reserva</h2>
+    <p>Al pulsar una mesa reservada se abre el panel de detalles con:</p>
+
+    <div class="ui-mockup">
+      <div class="ui-mockup-title">Panel de detalles de reserva</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+        <div><strong>🪑 N.º de mesa:</strong> Mesa 3</div>
+        <div><strong>👤 Cliente:</strong> Ana García</div>
+        <div><strong>📞 Teléfono:</strong> +34 600 123 456</div>
+        <div><strong>🔖 N.º reserva:</strong> #RES-A1B2C3</div>
+        <div><strong>🕐 Hora:</strong> 21:00 (editable)</div>
+        <div><strong>👥 Comensales:</strong> 2 adultos + 1 trona</div>
+        <div><strong>🛒 Carrito:</strong> Sí</div>
+        <div><strong>🐶 Mascota:</strong> No</div>
+        <div style="grid-column:1/-1"><strong>💬 Comentario:</strong> "Mesa junto a la ventana si es posible"</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Acción</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>✏️ Cambiar hora</td><td>Seleccione un nuevo slot del turno actual.</td></tr>
+        <tr><td>👥 Cambiar comensales</td><td>Modifique comensales, tronas, carrito o mascotas.</td></tr>
+        <tr><td>🔀 Editar mesa</td><td>Cambia la mesa asignada. Solo muestra mesas compatibles con los comensales de la reserva.</td></tr>
+        <tr><td>➕ Añadir reserva posterior</td><td>Visible solo si el tiempo de rotación lo permite. La hora mínima se calcula automáticamente.</td></tr>
+        <tr><td>📲 Notificar cambio</td><td>Envía WhatsApp al cliente con los datos actualizados.</td></tr>
+        <tr><td>☎️ Llamar</td><td>Abre la app de teléfono con el número del cliente.</td></tr>
+        <tr><td>💬 WhatsApp</td><td>Abre WhatsApp con el número del cliente.</td></tr>
+        <tr><td>❌ Anular reserva</td><td>Cancela la reserva con confirmación previa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.6 Agrupar Mesas (Nuevo Flujo en 2 Pasos)</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Pulse sobre la mesa libre → seleccione <strong>Agrupar</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text"><strong>Paso 1 — Horario:</strong> Seleccione la franja horaria para la que necesita más capacidad. El sistema comprobará qué mesas estarán disponibles a esa hora (libres o liberadas por rotación).</span></li>
+      <li><span class="step-num">3</span><span class="step-text"><strong>Paso 2 — Mesas:</strong> Seleccione las mesas a agrupar. Las marcadas como "Libre por rotación" indican que tienen reserva previa pero quedarán disponibles a la hora elegida.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Configure la capacidad total del grupo y pulse <strong>Agrupar Mesas</strong>.</span></li>
+    </ol>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body">
+        <h4>Importante sobre grupos temporales</h4>
+        <p>Las mesas agrupadas desaparecen del planning y solo aparece la mesa de grupo. Si el tiempo de rotación lo permite, las mesas individuales reaparecen como "Libre a partir de HH:MM" para nuevas reservas posteriores. Para deshacer el grupo, pulse sobre la mesa de grupo libre y seleccione "Deshacer Grupo".</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 3</div>
+  <h1 class="chapter-title">Reservas Pro</h1>
+  <p class="chapter-lead">Vista detallada de todas las reservas con búsqueda avanzada, gestión completa y lista de espera.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">3.1 Estados de una Reserva</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+      <span class="badge badge-yellow">Pendiente</span>
+      <span class="badge badge-green">Confirmada</span>
+      <span class="badge" style="background:#059669;color:#fff">En Curso</span>
+      <span class="badge badge-purple">Añadida</span>
+      <span class="badge badge-blue">Valorable</span>
+      <span class="badge badge-gray">Finalizada</span>
+      <span class="badge badge-red">Anulada</span>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Estado</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>El cliente no ha confirmado la reserva todavía.</td></tr>
+        <tr><td><span class="badge badge-green">Confirmada</span></td><td>El cliente ha confirmado su asistencia.</td></tr>
+        <tr><td><span class="badge" style="background:#059669;color:#fff">En Curso</span></td><td>El cliente está en el local en este momento.</td></tr>
+        <tr><td><span class="badge badge-purple">Añadida</span></td><td>Reserva añadida por el restaurante (walk-in o segunda reserva en la misma mesa).</td></tr>
+        <tr><td><span class="badge badge-blue">Valorable</span></td><td>La reserva ha finalizado y el cliente puede dejar valoración.</td></tr>
+        <tr><td><span class="badge badge-gray">Finalizada</span></td><td>Reserva completada y valorada o expirada el plazo de valoración.</td></tr>
+        <tr><td><span class="badge badge-red">Anulada</span></td><td>Cancelada por el cliente o por el restaurante.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3.2 Crear Reserva desde el Panel</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Pulse <strong>+ Nueva Reserva</strong> en Reservas Pro.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Seleccione <strong>fecha</strong>, <strong>ubicación</strong>, <strong>número de comensales</strong> y <strong>hora</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Introduzca el <strong>teléfono del cliente</strong>. Si ya existe, sus datos se cargan automáticamente.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Complete nombre, notas adicionales y requisitos especiales (tronas, carrito, mascotas).</span></li>
+      <li><span class="step-num">5</span><span class="step-text">Pulse <strong>Crear Reserva</strong>. La reserva queda <em>confirmada automáticamente</em> al crearse desde el panel.</span></li>
+    </ol>
+
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-body">
+        <h4>Las reservas creadas desde el panel</h4>
+        <p>No pasan por el estado "Pendiente". Se confirman directamente y se envía el mensaje de confirmación al cliente por WhatsApp si el envío automático está activo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3.3 Lista de Espera</h2>
+    <p>Cuando no hay disponibilidad para un turno, los clientes pueden apuntarse a la lista de espera. El sistema gestiona el proceso automáticamente:</p>
+
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">El cliente solicita lista de espera desde la web pública.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">El sistema registra la petición y envía al cliente una <strong>notificación de confirmación por WhatsApp</strong> con los datos de la solicitud.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Al cancelarse una reserva que libera plazas, el sistema <strong>notifica automáticamente al primer cliente en lista de espera</strong> (por orden de solicitud) con un enlace para confirmar su reserva.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Si el cliente no confirma en el tiempo establecido, se avisa al siguiente en la lista.</span></li>
+    </ol>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body">
+        <h4>Gestión desde el panel</h4>
+        <p>En Reservas Pro → Lista de Espera puede ver todas las solicitudes pendientes, su orden de prioridad y gestionarlas manualmente si es necesario.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 4</div>
+  <h1 class="chapter-title">Mesas</h1>
+  <p class="chapter-lead">Configure la distribución permanente de su restaurante con toda la información necesaria para la asignación inteligente de reservas.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">4.1 Crear una Mesa</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Mesas</strong> en el menú lateral.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse <strong>+ Añadir Mesa</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Complete todos los campos (ver tabla) y pulse <strong>Guardar</strong>.</span></li>
+    </ol>
+
+    <table class="data-table">
+      <thead><tr><th>Campo</th><th>Descripción</th><th>Recomendación</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Nombre</strong></td><td>Identificador visible (ej: Mesa 1, Barra A)</td><td>Nombres cortos y claros</td></tr>
+        <tr><td><strong>Ubicación</strong></td><td>Sala a la que pertenece</td><td>Cree primero las ubicaciones</td></tr>
+        <tr><td><strong>Cap. mínima</strong></td><td>Mínimo de comensales para reservar esta mesa</td><td>1 para mesas individuales</td></tr>
+        <tr><td><strong>Cap. máxima</strong></td><td>Máximo de comensales</td><td>Capacidad real de la mesa</td></tr>
+        <tr><td><strong>Tronas</strong></td><td>Número de tronas disponibles</td><td>0 si no admite</td></tr>
+        <tr><td><strong>Permite carrito</strong></td><td>Si hay espacio para carrito de bebé</td><td>Activar en mesas amplias</td></tr>
+        <tr><td><strong>Permite mascotas</strong></td><td>Si admite mascotas</td><td>Solo en terraza/exterior</td></tr>
+        <tr><td><strong>Tiempo de rotación</strong></td><td>Minutos entre reservas consecutivas en la misma mesa</td><td>90–120 minutos</td></tr>
+        <tr><td><strong>Prioridad</strong></td><td>1 al 10. Mayor número = se asigna primero automáticamente</td><td>Las mejores mesas con prioridad alta</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4.2 Mesas de Cliente VIP</h2>
+    <p>Al crear un perfil VIP, puede asociar mesas preferidas. Cuando ese cliente hace una reserva, el sistema intentará asignar automáticamente sus mesas favoritas si están disponibles.</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">👑</span>
+      <div class="callout-body">
+        <h4>Indicador VIP en el planning</h4>
+        <p>Las mesas con reservas de clientes VIP muestran el icono de corona 👑 en el planning para identificarlas rápidamente.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 5</div>
+  <h1 class="chapter-title">Horarios</h1>
+  <p class="chapter-lead">Define cuándo está abierto su restaurante, qué turnos ofrece y cuántos comensales admite en cada franja horaria.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">5.1 Configurar el Horario Semanal</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Horarios</strong> en el menú lateral.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Active el toggle de cada día que el restaurante esté <strong>abierto</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Para cada día abierto, añada uno o varios <strong>turnos</strong> con: nombre del turno, hora de inicio, hora de fin y máximo de comensales por slot de 30 minutos.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Opcionalmente, configure la <strong>valoración mínima</strong> global y local para acceder a ese turno.</span></li>
+      <li><span class="step-num">5</span><span class="step-text">Pulse <strong>Guardar</strong>.</span></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">5.2 Excepciones de Días</h2>
+    <p>Las excepciones permiten personalizar el horario de un día concreto (festivos, eventos, etc.). Tienen <strong>prioridad absoluta</strong> sobre el horario semanal.</p>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Pulse <strong>+ Añadir Excepción</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Seleccione la <strong>fecha</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Marque si el restaurante está <strong>abierto</strong> o <strong>cerrado</strong> ese día.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Si está abierto, configure los turnos específicos con sus franjas y límites de comensales personalizados.</span></li>
+      <li><span class="step-num">5</span><span class="step-text">Pulse <strong>Guardar</strong>.</span></li>
+    </ol>
+
+    <div class="callout tip">
+      <span class="callout-icon">🎄</span>
+      <div class="callout-body">
+        <h4>Caso de uso: festivos y eventos especiales</h4>
+        <p>Use las excepciones para ampliar el aforo en días especiales (San Valentín, Nochebuena) o para cerrar el restaurante en festivos locales sin modificar el horario semanal base.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 6</div>
+  <h1 class="chapter-title">Valoraciones + VIP</h1>
+  <p class="chapter-lead">Gestione la reputación de sus clientes y ofrézcase acceso preferente a los mejores.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">6.1 Sistema de Valoraciones</h2>
+    <p>Tras cada reserva completada, el restaurante puede valorar al cliente del 1 al 5. Las valoraciones influyen en:</p>
+    <ul class="bullets">
+      <li><strong>Valoración global</strong> — Media de todas las valoraciones del cliente en toda la plataforma.</li>
+      <li><strong>Valoración local</strong> — Media específica en su restaurante.</li>
+    </ul>
+
+    <div class="callout info">
+      <span class="callout-icon">🌟</span>
+      <div class="callout-body">
+        <h4>Acceso por valoración a los turnos</h4>
+        <p>En Horarios puede establecer una valoración mínima (global y/o local) para acceder a un turno concreto. Los clientes que no lleguen a ese umbral no verán ese horario al intentar reservar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">6.2 Clientes VIP</h2>
+    <ul class="bullets">
+      <li>Se indica el indicador de corona 👑 en las tarjetas de mesa del planning.</li>
+      <li>El sistema asigna automáticamente las mesas preferidas del cliente VIP al crear su reserva.</li>
+      <li>El restaurante recibe un aviso al confirmar la reserva de un cliente VIP.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">6.3 Bloquear un Cliente</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda al perfil del cliente desde <strong>Reservas Pro</strong> o desde el <strong>Planning</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Active el toggle <strong>Bloquear cliente</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Añada el <strong>motivo del bloqueo</strong> (solo visible para el restaurante).</span></li>
+    </ol>
+    <p>El cliente bloqueado verá un mensaje de error al intentar hacer reservas en su restaurante.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 7</div>
+  <h1 class="chapter-title">Configuración del Restaurante</h1>
+  <p class="chapter-lead">Los datos básicos, imagen pública y las opciones de reserva que verán sus clientes.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">7.1 Datos del Restaurante</h2>
+    <table class="data-table">
+      <thead><tr><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre</td><td>Nombre visible públicamente</td></tr>
+        <tr><td>Descripción</td><td>Texto que aparece en la página pública del restaurante</td></tr>
+        <tr><td>Tipo de cocina</td><td>Categoría gastronómica para filtros de búsqueda</td></tr>
+        <tr><td>Teléfono</td><td>Visible en mensajes de confirmación al cliente</td></tr>
+        <tr><td>URL Google Maps</td><td>Enlace directo para que los clientes lleguen al restaurante</td></tr>
+        <tr><td>Imagen principal</td><td>Foto de portada del restaurante</td></tr>
+        <tr><td>Acepta tronas / carritos / mascotas</td><td>Activa las opciones correspondientes en el formulario de reserva</td></tr>
+        <tr><td>Días de antelación máxima</td><td>Hasta cuántos días en el futuro puede reservar un cliente</td></tr>
+        <tr><td>Minutos mínimos de antelación</td><td>Tiempo mínimo antes de la reserva para poder hacerla</td></tr>
+        <tr><td>Minutos para modificar/cancelar</td><td>Tiempo mínimo antes de la reserva para modificar o cancelar</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">7.2 Ubicaciones</h2>
+    <p>Define las zonas del restaurante (ej: Comedor Interior, Terraza, Barra). Cada ubicación tiene su propia imagen y su propio conjunto de mesas. Los clientes pueden elegir ubicación al reservar.</p>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Vaya a <strong>Configuración → Ubicaciones</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse <strong>+ Añadir Ubicación</strong> e introduzca el nombre e imagen.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Guarde. Podrá asignar mesas a esta ubicación desde el módulo Mesas.</span></li>
+    </ol>
+  </div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 8</div>
+  <h1 class="chapter-title">Configuración Pro — WhatsApp</h1>
+  <p class="chapter-lead">Configure las notificaciones automáticas por WhatsApp para mantener a sus clientes informados en todo momento.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">8.1 Vincular WhatsApp Web</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Configuración Pro</strong> en el menú lateral.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse <strong>Ver Código QR</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">En su móvil, abra <strong>WhatsApp</strong> → pulse los 3 puntos → <strong>Dispositivos vinculados</strong> → <strong>Vincular dispositivo</strong>.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Escanee el código QR que aparece en pantalla con la cámara del móvil.</span></li>
+      <li><span class="step-num">5</span><span class="step-text">Cuando aparezca el indicador verde de <strong>Conectado</strong>, el sistema está listo para enviar notificaciones.</span></li>
+    </ol>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body">
+        <h4>Si el código QR caduca o la sesión expira</h4>
+        <p>Pulse "Reiniciar sesión WhatsApp". El sistema eliminará la sesión anterior y generará un nuevo código QR para volver a vincular el número.</p>
+      </div>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant/config-pro</div>
+      </div>
+      <div class="screenshot-content" style="min-height:160px">
+        <div style="width:100px;height:100px;background:repeating-linear-gradient(0deg,#000 0,#000 10px,#fff 10px,#fff 20px),repeating-linear-gradient(90deg,#000 0,#000 10px,#fff 10px,#fff 20px);background-blend-mode:difference;border:4px solid #000;border-radius:4px"></div>
+        <span class="screenshot-label">Código QR de vinculación WhatsApp</span>
+        <span class="screenshot-desc">Código QR generado para el restaurante. Estado: "Esperando escaneo"</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">8.2 Notificaciones Automáticas</h2>
+    <p>Cuando el envío automático está activado, el sistema envía por WhatsApp:</p>
+    <ul class="bullets">
+      <li>✅ Confirmación de nueva reserva al cliente.</li>
+      <li>⏰ Recordatorio 24 horas antes de la reserva (configurable).</li>
+      <li>⏰ Recordatorio X minutos antes de la reserva (configurable).</li>
+      <li>✏️ Notificación de modificación de reserva.</li>
+      <li>❌ Notificación de cancelación de reserva.</li>
+      <li>📝 Confirmación de registro en lista de espera.</li>
+      <li>🔔 Aviso de mesa disponible para clientes en lista de espera.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CHAPTER 9 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 9</div>
+  <h1 class="chapter-title">Juego del Chef</h1>
+  <p class="chapter-lead">Sistema de gamificación para fidelizar a sus clientes mediante logros y colecciones de ingredientes.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">9.1 ¿Cómo funciona?</h2>
+    <p>Los clientes acumulan "ingredientes" por cada reserva completada. Al llegar a ciertos hitos, desbloquean logros que se muestran en su perfil (ej: <em>Maestro de los Mariscos</em>, <em>Fan del Brunch</em>).</p>
+
+    <table class="data-table">
+      <thead><tr><th>Beneficio</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>🏆 Fidelización</td><td>Los clientes quieren completar su colección de logros, incentivando reservas recurrentes.</td></tr>
+        <tr><td>⭐ Mejores valoraciones</td><td>Los clientes con logros suelen ser más puntuales y dejan mejores reseñas.</td></tr>
+        <tr><td>📢 Recomendaciones</td><td>Genera contenido orgánico en redes sociales cuando los clientes comparten sus logros.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">9.2 Configuración del Juego</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Juego del Chef</strong> en el menú lateral.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Active/desactive el juego con el toggle principal.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Configure los retos activos y sus recompensas.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Consulte el ranking de clientes más activos.</span></li>
+    </ol>
+  </div>
+
+  <div style="margin-top:60px;padding:24px;background:var(--primary-light);border-radius:12px;text-align:center">
+    <h3 style="color:var(--primary);margin-bottom:8px">¿Necesita soporte?</h3>
+    <p style="color:#5B21B6;margin:0">Contacte con nuestro equipo a través del botón 🎧 del panel de restaurante o escribiendo a <strong>soporte@quieromesa.com</strong></p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

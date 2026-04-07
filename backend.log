@@ -1,0 +1,170 @@
+✅ Variables de entorno cargadas desde /home/user/rork-app/env
+⚠️ Carpeta dist/ no encontrada. Solo API disponible.
+✅ Variables de entorno cargadas
+🗄️ DATABASE_URL: configurada
+📧 RESEND_API_KEY: configurada (opcional)
+🌐 API URL: https://quieromesa.com
+🚀 Iniciando servidor en puerto 3000...
+🔗 Conectando a PostgreSQL...
+✅ Pool de PostgreSQL creado exitosamente
+✅ Servidor corriendo en http://0.0.0.0:3000
+📡 API disponible en http://0.0.0.0:3000/api
+🔧 tRPC endpoint: http://0.0.0.0:3000/api/trpc
+🏥 Health check: http://0.0.0.0:3000/api/health
+Started development server: http://0.0.0.0:3000
+[WhatsApp Worker] 🚀 Iniciando worker de notificaciones...
+✅ Worker de notificaciones WhatsApp iniciado
+🚀 [CLEANUP] Iniciando worker de limpieza (cada 1 minuto(s))
+🧹 [CLEANUP] Iniciando limpieza de reservas pendientes expiradas...
+🧹 [CLEANUP NEW USERS] Buscando usuarios nuevos sin reservas confirmadas...
+✅ Worker de limpieza de reservas pendientes iniciado
+🚀 [AUTO-RATING] Worker iniciado
+✅ Worker de auto-valoración iniciado
+🚀 [COMPLETION] Worker iniciado
+✅ Worker de completado de reservas iniciado
+[Subscription Expiry Worker] 🚀 Iniciando worker de alertas de caducidad...
+[Subscription Expiry Worker] 🔍 Verificando suscripciones próximas a caducar...
+✅ Worker de alertas de caducidad iniciado
+[WhatsApp Manager] Error inicializando sesiones activas: 1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED ::1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "::1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED 127.0.0.1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "127.0.0.1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+
+[WhatsApp Worker] Error limpiando notificaciones antiguas: 1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED ::1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "::1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED 127.0.0.1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "127.0.0.1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+
+❌ [CLEANUP] Error limpiando reservas pendientes: 
+❌ [CLEANUP NEW USERS] Error eliminando usuarios nuevos: 
+[Subscription Expiry Worker] ❌ Error verificando suscripciones: 1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED ::1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "::1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED 127.0.0.1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "127.0.0.1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+
+1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED ::1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "::1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+1175 |   afterConnect(status, self._handle, req, readable, writable);
+1176 | }
+1177 | function createConnectionError(req, status) {
+1178 |   let details;
+1179 |   if (req.localAddress && req.localPort)
+1180 |   let ex = new ExceptionWithHostPort(status, "connect", req.address, req.port);
+                  ^
+error: connect ECONNREFUSED 127.0.0.1:5432
+   errno: -111,
+ syscall: "connect",
+    port: 5432,
+ address: "127.0.0.1",
+    code: "ECONNREFUSED"
+
+      at createConnectionError (node:net:1180:12)
+      at afterConnectMultiple (node:net:1169:35)
+      at connectError (node:net:350:48)
+
+Bun v1.3.9 (Linux x64)

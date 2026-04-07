@@ -1,0 +1,10 @@
+/var/www/reservamesa/backend.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    maxsize 50M
+}

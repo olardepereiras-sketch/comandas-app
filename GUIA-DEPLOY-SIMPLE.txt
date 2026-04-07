@@ -1,0 +1,87 @@
+═══════════════════════════════════════════════════════════════════
+  GUÍA DE DEPLOY SIMPLE - ReservaMesa
+  Actualizado: 20 Diciembre 2025
+═══════════════════════════════════════════════════════════════════
+
+🎯 OBJETIVO: Subir el proyecto al VPS de forma sencilla y sin errores
+
+═══════════════════════════════════════════════════════════════════
+PARTE 1: EN TU PC WINDOWS
+═══════════════════════════════════════════════════════════════════
+
+1. Abrir PowerShell en la carpeta del proyecto
+
+2. Ejecutar:
+   .\deploy-windows.ps1
+
+3. Esto generará la carpeta 'dist/' con el frontend compilado
+
+═══════════════════════════════════════════════════════════════════
+PARTE 2: SUBIR ARCHIVOS AL VPS
+═══════════════════════════════════════════════════════════════════
+
+Opción A - Con WinSCP (Recomendado):
+   1. Abrir WinSCP
+   2. Conectar a: 200.234.236.133 (usuario: root)
+   3. Ir a la carpeta: /var/www/reservamesa
+   4. Subir estas carpetas/archivos:
+      ✓ dist/ (completa)
+      ✓ backend/ (completa)
+      ✓ .env
+      ✓ package.json
+      ✓ bun.lock
+      ✓ tsconfig.json
+
+Opción B - Con FileZilla:
+   (Igual que WinSCP)
+
+Opción C - Con comandos (si tienes Git Bash):
+   scp -r dist backend .env package.json bun.lock root@200.234.236.133:/var/www/reservamesa/
+
+═══════════════════════════════════════════════════════════════════
+PARTE 3: CONFIGURAR EL VPS (SSH)
+═══════════════════════════════════════════════════════════════════
+
+1. Conectar por SSH:
+   ssh root@200.234.236.133
+
+2. Copiar y pegar LÍNEA POR LÍNEA los comandos de: comandos-vps.sh
+
+   O ejecutar todo junto:
+   bash /var/www/reservamesa/comandos-vps.sh
+
+═══════════════════════════════════════════════════════════════════
+VERIFICACIÓN FINAL
+═══════════════════════════════════════════════════════════════════
+
+Abrir en el navegador:
+   → http://200.234.236.133/admin
+   → http://200.234.236.133/api/health
+
+Si ves errores:
+   tail -f /var/www/reservamesa/backend.log
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN DE PROBLEMAS COMUNES
+═══════════════════════════════════════════════════════════════════
+
+❌ Error: "c.getMutationDefaults is not a function"
+   → Ejecutar en el VPS:
+     bun remove @trpc/client @trpc/react-query @trpc/server
+     bun add @trpc/client@10.45.2 @trpc/react-query@10.45.2 @trpc/server@10.45.2
+     pkill -f bun
+     nohup bun run backend/server.ts > backend.log 2>&1 &
+
+❌ Error: "must be owner of table auth_sessions"
+   → La tabla ya existe y pertenece a otro usuario PostgreSQL
+   → Ejecutar en el VPS:
+     sudo -u postgres psql -d reservamesa -c "DROP TABLE IF EXISTS auth_sessions CASCADE"
+     bun --env-file .env backend/db/clean-and-init.ts
+
+❌ Backend no inicia:
+   → Ver el log:
+     cat /var/www/reservamesa/backend.log
+   → Verificar que DATABASE_URL está en .env:
+     grep DATABASE_URL /var/www/reservamesa/.env
+
+═══════════════════════════════════════════════════════════════════

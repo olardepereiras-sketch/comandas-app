@@ -1,0 +1,26 @@
+<IfModule mod_headers.c>
+    # Permitir acceso desde Instagram y otros navegadores
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Credentials "true"
+    Header set Cross-Origin-Resource-Policy "cross-origin"
+    Header set Referrer-Policy "unsafe-url"
+    
+    # Headers específicos para imágenes
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Cross-Origin-Resource-Policy "cross-origin"
+        Header set Cache-Control "public, max-age=86400"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # No hacer nada para archivos existentes
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    
+    # Redirigir todo a index.html
+    RewriteRule ^ index.html [L]
+</IfModule>

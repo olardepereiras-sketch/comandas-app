@@ -1,0 +1,215 @@
+import { publicProcedure, TRPCError } from '../../../create-context';
+import { z } from 'zod';
+
+function placeholder(idx: number, cast?: string): string {
+  return `${idx}${cast ? '::' + cast : ''}`;
+}
+
+function addParam(updates: string[], params: any[], paramCount: { value: number }, column: string, value: any, cast?: string): void {
+  const idx = paramCount.value;
+  paramCount.value++;
+  updates.push(column + ' = ' + placeholder(idx, cast));
+  params.push(value);
+}
+
+export const updateRestaurantProcedure = publicProcedure
+  .input(
+    z.object({
+      id: z.string(),
+      name: z.string().optional(),
+      description: z.string().optional(),
+      username: z.string().optional(),
+      password: z.string().optional(),
+      profileImageUrl: z.string().optional(),
+      googleMapsUrl: z.string().optional(),
+      cuisineType: z.array(z.string()).optional(),
+      address: z.string().optional(),
+      postalCode: z.string().optional(),
+      phone: z.string().optional(),
+      email: z.string().email().optional(),
+      cityId: z.string().optional(),
+      provinceId: z.string().optional(),
+      subscriptionPlanId: z.string().optional(),
+      salesRepId: z.string().optional(),
+      advanceBookingDays: z.number().optional(),
+      customLinks: z.array(
+        z.object({
+          url: z.string(),
+          buttonText: z.string(),
+          enabled: z.boolean(),
+        })
+      ).optional(),
+      phoneNumbers: z.array(z.string()).optional(),
+      notificationPhones: z.array(z.string()).optional(),
+      notificationEmail: z.string().email().optional(),
+      whatsappCustomMessage: z.string().optional(),
+      tableRotationTime: z.number().optional(),
+      autoSendWhatsapp: z.boolean().optional(),
+      minBookingAdvanceMinutes: z.number().optional(),
+      minModifyCancelMinutes: z.number().optional(),
+      useWhatsappWeb: z.boolean().optional(),
+      enableEmailNotifications: z.boolean().optional(),
+      reminder1Enabled: z.boolean().optional(),
+      reminder1Hours: z.number().optional(),
+      reminder2Enabled: z.boolean().optional(),
+      reminder2Minutes: z.number().optional(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    console.log('\ud83d\udd35 [UPDATE RESTAURANT] Actualizando restaurante:', input.id);
+
+    const updates: string[] = [];
+    const params: any[] = [];
+    const pc = { value: 1 };
+
+    if (input.name !== undefined) {
+      addParam(updates, params, pc, 'name', input.name, 'text');
+    }
+    if (input.description !== undefined) {
+      addParam(updates, params, pc, 'description', input.description, 'text');
+    }
+    if (input.username !== undefined) {
+      addParam(updates, params, pc, 'username', input.username, 'text');
+    }
+    if (input.password !== undefined) {
+      addParam(updates, params, pc, 'password', input.password, 'text');
+    }
+    if (input.profileImageUrl !== undefined) {
+      let imageUrl = input.profileImageUrl;
+      if (imageUrl && !imageUrl.startsWith('http')) {
+        imageUrl = 'https://quieromesa.com' + imageUrl;
+      }
+      addParam(updates, params, pc, 'profile_image_url', imageUrl, 'text');
+      addParam(updates, params, pc, 'image_url', imageUrl, 'text');
+    }
+    if (input.googleMapsUrl !== undefined) {
+      addParam(updates, params, pc, 'google_maps_url', input.googleMapsUrl, 'text');
+    }
+    if (input.cuisineType !== undefined) {
+      addParam(updates, params, pc, 'cuisine_type', JSON.stringify(input.cuisineType), 'text');
+    }
+    if (input.address !== undefined) {
+      addParam(updates, params, pc, 'address', input.address, 'text');
+    }
+    if (input.postalCode !== undefined) {
+      addParam(updates, params, pc, 'postal_code', input.postalCode, 'text');
+    }
+    if (input.cityId !== undefined) {
+      addParam(updates, params, pc, 'city_id', input.cityId, 'text');
+    }
+    if (input.provinceId !== undefined) {
+      addParam(updates, params, pc, 'province_id', input.provinceId, 'text');
+    }
+    if (input.phone !== undefined) {
+      addParam(updates, params, pc, 'phone', JSON.stringify([input.phone]), 'text');
+    }
+    if (input.phoneNumbers !== undefined) {
+      addParam(updates, params, pc, 'phone', JSON.stringify(input.phoneNumbers), 'text');
+    }
+    if (input.email !== undefined) {
+      addParam(updates, params, pc, 'email', input.email, 'text');
+    }
+    if (input.subscriptionPlanId !== undefined) {
+      addParam(updates, params, pc, 'subscription_plan_id', input.subscriptionPlanId, 'text');
+    }
+    if (input.salesRepId !== undefined) {
+      addParam(updates, params, pc, 'sales_rep_id', input.salesRepId, 'text');
+    }
+    if (input.advanceBookingDays !== undefined) {
+      addParam(updates, params, pc, 'advance_booking_days', input.advanceBookingDays);
+    }
+    if (input.customLinks !== undefined) {
+      addParam(updates, params, pc, 'custom_links', JSON.stringify(input.customLinks), 'text');
+    }
+    if (input.notificationPhones !== undefined) {
+      addParam(updates, params, pc, 'notification_phones', JSON.stringify(input.notificationPhones), 'text');
+    }
+    if (input.notificationEmail !== undefined) {
+      addParam(updates, params, pc, 'notification_email', input.notificationEmail, 'text');
+    }
+    if (input.whatsappCustomMessage !== undefined) {
+      addParam(updates, params, pc, 'whatsapp_custom_message', input.whatsappCustomMessage, 'text');
+    }
+    if (input.tableRotationTime !== undefined) {
+      addParam(updates, params, pc, 'table_rotation_time', Number(input.tableRotationTime));
+    }
+    if (input.autoSendWhatsapp !== undefined) {
+      addParam(updates, params, pc, 'auto_send_whatsapp', input.autoSendWhatsapp);
+    }
+    if (input.minBookingAdvanceMinutes !== undefined) {
+      addParam(updates, params, pc, 'min_booking_advance_minutes', Number(input.minBookingAdvanceMinutes));
+    }
+    if (input.useWhatsappWeb !== undefined) {
+      addParam(updates, params, pc, 'use_whatsapp_web', input.useWhatsappWeb);
+    }
+    if (input.enableEmailNotifications !== undefined) {
+      addParam(updates, params, pc, 'enable_email_notifications', input.enableEmailNotifications);
+    }
+    if (input.minModifyCancelMinutes !== undefined) {
+      addParam(updates, params, pc, 'min_modify_cancel_minutes', Number(input.minModifyCancelMinutes));
+    }
+    if (input.reminder1Enabled !== undefined) {
+      addParam(updates, params, pc, 'reminder1_enabled', input.reminder1Enabled);
+    }
+    if (input.reminder1Hours !== undefined) {
+      addParam(updates, params, pc, 'reminder1_hours', Number(input.reminder1Hours));
+    }
+    if (input.reminder2Enabled !== undefined) {
+      addParam(updates, params, pc, 'reminder2_enabled', input.reminder2Enabled);
+    }
+    if (input.reminder2Minutes !== undefined) {
+      addParam(updates, params, pc, 'reminder2_minutes', Number(input.reminder2Minutes));
+    }
+
+    addParam(updates, params, pc, 'updated_at', new Date());
+
+    const whereIdx = pc.value;
+    pc.value++;
+    params.push(input.id);
+
+    const sql = 'UPDATE restaurants SET ' + updates.join(', ') + ' WHERE id = ' + placeholder(whereIdx, 'text');
+    
+    console.log('\ud83d\udd0d [UPDATE RESTAURANT] SQL:', sql);
+    console.log('\ud83d\udd0d [UPDATE RESTAURANT] Params:', params);
+
+    if (updates.length === 1) {
+      console.log('\u26a0\ufe0f [UPDATE RESTAURANT] Solo updated_at para actualizar, considerando exito');
+      return { success: true, id: String(input.id) };
+    }
+
+    try {
+      console.log('\ud83d\udd0d [UPDATE RESTAURANT] Ejecutando query...');
+      const result = await ctx.db.query(sql, params);
+
+      console.log('\u2705 [UPDATE RESTAURANT] Restaurante actualizado:', {
+        id: input.id,
+        rowsAffected: result.rowCount,
+      });
+
+      if ((result.rowCount || 0) === 0) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Restaurante no encontrado',
+        });
+      }
+
+      const verify = await ctx.db.query(
+        'SELECT profile_image_url, image_url, min_booking_advance_minutes, min_modify_cancel_minutes, auto_send_whatsapp, table_rotation_time, use_whatsapp_web, enable_email_notifications, reminder1_enabled, reminder1_hours, reminder2_enabled, reminder2_minutes FROM restaurants WHERE id = ' + placeholder(1),
+        [input.id]
+      );
+      console.log('\u2705 [UPDATE RESTAURANT] Verificacion post-guardado:', verify.rows[0]);
+
+      return { success: true, id: String(input.id) };
+    } catch (error: any) {
+      console.error('\u274c [UPDATE RESTAURANT] Error:', error);
+      console.error('\u274c [UPDATE RESTAURANT] SQL:', sql);
+      console.error('\u274c [UPDATE RESTAURANT] Params:', params);
+      console.error('\u274c [UPDATE RESTAURANT] Error detail:', error.detail);
+      console.error('\u274c [UPDATE RESTAURANT] Error code:', error.code);
+      if (error.code === 'NOT_FOUND') throw error;
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Error al actualizar el restaurante: ' + error.message,
+      });
+    }
+  });

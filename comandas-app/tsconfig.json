@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "typeRoots": ["../node_modules/@types", "./node_modules/@types"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "global.d.ts"]
+}

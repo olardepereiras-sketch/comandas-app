@@ -1,0 +1,82 @@
+EXPO_PUBLIC_RORK_API_BASE_URL=https://quieromesa.com
+EXPO_PUBLIC_API_URL=https://quieromesa.com
+
+# Puerto del servidor (opcional, por defecto 3000)
+PORT=3000
+
+# ===========================================
+# BASE DE DATOS POSTGRESQL
+# ===========================================
+# IMPORTANTE: PostgreSQL local en el VPS
+# Formato: postgresql://usuario:password@host:puerto/nombre_base_datos
+#
+# 🖥️ Desarrollo Local:
+# DATABASE_URL=postgresql://postgres:password@localhost:5432/reservamesa
+#
+# 🚀 Producción VPS:
+DATABASE_URL=postgresql://reservamesa_user:MiContrasenaSegura666@localhost:5432/reservamesa_db
+
+# Variables de entorno adicionales para producción
+NODE_ENV=production
+
+# Ruta a la base de datos (igual que DATABASE_URL)
+EXPO_PUBLIC_RORK_DB_ENDPOINT=postgresql://reservamesa_user:MiContrasenaSegura666@localhost:5432/reservamesa_db
+
+# Host del servidor (0.0.0.0 para permitir conexiones externas en VPS)
+HOST=0.0.0.0
+
+# ===========================================
+# RESEND EMAIL SERVICE
+# ===========================================
+# API Key de Resend para envío de correos electrónicos
+# Obtén tu API key en https://resend.com/api-keys
+# 
+# ⚠️ IMPORTANTE:
+# - Esta API key es necesaria para enviar códigos de verificación
+# - Sin esta key, el login de admin y restaurantes fallará
+# - La key debe tener permisos de envío de emails
+#
+# 📝 FORMATO:
+# RESEND_API_KEY=re_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#
+RESEND_API_KEY=re_5qv8LwMe_MA9V47G6dnob8FgtwvBj6iBG
+
+# ===========================================
+# TWILIO WHATSAPP SERVICE
+# ===========================================
+# Para enviar notificaciones por WhatsApp
+# Obtén tus credenciales en https://console.twilio.com
+#
+# 📝 CÓMO CONFIGURAR:
+#
+# OPCIÓN 1 - SANDBOX (PARA PRUEBAS - GRATIS):
+# ────────────────────────────────────────────
+# 1. Ve a https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
+# 2. Copia tu Account SID y Auth Token
+# 3. El número de sandbox es: +14155238886
+# 4. Los usuarios deben enviar el código de activación primero
+#    Ejemplo: "join <tu-codigo>" al +14155238886
+#
+# TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# TWILIO_AUTH_TOKEN=tu_auth_token_aqui
+# TWILIO_WHATSAPP_FROM=+14155238886
+#
+# OPCIÓN 2 - PRODUCCIÓN (WHATSAPP BUSINESS API):
+# ───────────────────────────────────────────────
+# 1. Solicita aprobación para tu número en:
+#    https://console.twilio.com/us1/develop/sms/senders/whatsapp-senders
+# 2. El proceso toma varios días
+# 3. Una vez aprobado, usa tu número:
+#
+# TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# TWILIO_AUTH_TOKEN=tu_auth_token_aqui
+# TWILIO_WHATSAPP_FROM=+34XXXXXXXXX (tu número aprobado)
+#
+# ⚠️ IMPORTANTE:
+# - Si estas variables NO están configuradas, solo se enviará email
+# - Verifica que el número esté en formato E.164: +[código país][número]
+# - Para sandbox: los destinatarios deben activar primero
+#
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_WHATSAPP_FROM=

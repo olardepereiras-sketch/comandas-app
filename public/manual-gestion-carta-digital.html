@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Gestión de Carta Digital — QuieroMesa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --primary: #F59E0B; --primary-light: #FEF3C7; --primary-dark: #D97706;
+    --accent: #EF4444; --accent2: #3B82F6;
+    --text: #111827; --text-muted: #6B7280; --border: #E5E7EB; --bg: #F9FAFB; --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; color: var(--text); background: var(--white); line-height: 1.7; font-size: 14px; }
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #78350F 0%, #D97706 40%, #F59E0B 70%, #FCD34D 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px 40px; text-align: center; page-break-after: always;
+  }
+  .cover-logo { width: 80px; height: 80px; background: rgba(255,255,255,0.15); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 32px; border: 2px solid rgba(255,255,255,0.3); }
+  .cover-brand { font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 12px; }
+  .cover-title { font-size: 42px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 16px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .cover-subtitle { font-size: 18px; color: rgba(255,255,255,0.85); max-width: 500px; margin-bottom: 48px; }
+  .cover-modules { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 600px; }
+  .cover-module-tag { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .cover-version { margin-top: 60px; font-size: 12px; color: rgba(255,255,255,0.5); }
+  .page-wrapper { max-width: 860px; margin: 0 auto; padding: 40px 48px; }
+  .toc-page { page-break-after: always; padding: 48px 0; }
+  .toc-title { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
+  .toc-divider { width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary), #FCD34D); border-radius: 2px; margin-bottom: 36px; }
+  .toc-list { list-style: none; }
+  .toc-chapter { border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .toc-chapter-link { display: flex; align-items: center; gap: 14px; padding: 12px 8px; text-decoration: none; color: var(--text); }
+  .toc-num { width: 28px; height: 28px; border-radius: 8px; background: var(--primary-light); color: var(--primary-dark); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .toc-name { flex: 1; font-size: 15px; font-weight: 600; }
+  .toc-dots { flex: 1; border-bottom: 2px dotted var(--border); height: 1px; margin: 0 8px; }
+  .toc-page-num { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .chapter { page-break-before: always; padding-top: 32px; }
+  .chapter-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary-dark); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .chapter-title { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+  .chapter-lead { font-size: 16px; color: var(--text-muted); max-width: 640px; margin-bottom: 32px; line-height: 1.6; }
+  .chapter-divider { height: 3px; background: linear-gradient(90deg, var(--primary), #FCD34D, transparent); border-radius: 2px; margin-bottom: 36px; }
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; }
+  p { margin-bottom: 12px; color: var(--text); }
+  .steps { list-style: none; margin-bottom: 16px; }
+  .steps li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
+  .steps li:last-child { border-bottom: none; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; }
+  .bullets { list-style: none; margin-bottom: 16px; }
+  .bullets li { padding: 6px 0 6px 20px; position: relative; font-size: 14px; line-height: 1.6; }
+  .bullets li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+  .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .data-table th { background: var(--primary-dark); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+  .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: var(--bg); }
+  .data-table .check { color: #059669; font-weight: 700; text-align: center; }
+  .callout { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 12px; }
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .callout-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .callout-body p { font-size: 13px; margin-bottom: 0; }
+  .callout.tip { background: #D1FAE5; border-left: 4px solid #10B981; }
+  .callout.tip .callout-body h4 { color: #065F46; }
+  .callout.tip .callout-body p { color: #047857; }
+  .callout.warning { background: #FEF3C7; border-left: 4px solid #F59E0B; }
+  .callout.warning .callout-body h4 { color: #92400E; }
+  .callout.warning .callout-body p { color: #B45309; }
+  .callout.info { background: #EFF6FF; border-left: 4px solid #3B82F6; }
+  .callout.info .callout-body h4 { color: #1E40AF; }
+  .callout.info .callout-body p { color: #2563EB; }
+  .callout.highlight { background: var(--primary-light); border-left: 4px solid var(--primary); }
+  .callout.highlight .callout-body h4 { color: #92400E; }
+  .callout.highlight .callout-body p { color: #B45309; }
+  .screenshot { background: var(--bg); border: 2px dashed var(--border); border-radius: 12px; padding: 0; margin: 20px 0; overflow: hidden; }
+  .screenshot-bar { background: #E5E7EB; padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
+  .screenshot-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .screenshot-url { flex: 1; background: #fff; border-radius: 4px; padding: 3px 10px; font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+  .screenshot-content { padding: 20px 24px; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; }
+  .screenshot-label { font-size: 13px; font-weight: 600; color: #9CA3AF; }
+  .screenshot-desc { font-size: 11px; color: #D1D5DB; max-width: 400px; }
+  .ui-mockup { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .ui-mockup-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .ui-mockup-title::after { content: ''; flex: 1; height: 1px; background: var(--primary-light); }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-amber { background: #FEF3C7; color: #92400E; }
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-red { background: #FEE2E2; color: #991B1B; }
+  .badge-blue { background: #DBEAFE; color: #1E40AF; }
+  .faq-item { border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .faq-q { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+  .faq-a { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.6; }
+  .allergen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+  .allergen-item { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; }
+  .allergen-icon { width: 28px; height: 28px; background: #FEF3C7; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .dish-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 8px 0; }
+  .dish-card-img { height: 80px; background: linear-gradient(135deg, #FEF3C7, #FDE68A); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .dish-card-body { padding: 10px 12px; }
+  .dish-card-name { font-weight: 700; font-size: 14px; }
+  .dish-card-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .dish-card-price { font-size: 16px; font-weight: 800; color: var(--primary-dark); margin-top: 6px; }
+  .dish-card-tags { display: flex; gap: 4px; margin-top: 6px; }
+  .dish-tag { background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  @media print { body { font-size: 12px; } .cover { height: 100vh; } .chapter { page-break-before: always; } a { text-decoration: none; color: inherit; } .callout { break-inside: avoid; } table { break-inside: avoid; } @page { margin: 20mm; } }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary-dark); color: #fff; border: none; padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(217,119,6,0.4); z-index: 100; display: flex; align-items: center; gap: 8px; }
+  .print-btn:hover { background: #92400E; }
+  @media print { .print-btn { display: none; } }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ Exportar PDF</button>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">🍽️</div>
+  <div class="cover-brand">QuieroMesa · Sistema de Gestión</div>
+  <h1 class="cover-title">Manual de Gestión<br>de Carta Digital</h1>
+  <p class="cover-subtitle">Guía completa para crear su menú digital, gestionar categorías, platos, alérgenos y código QR</p>
+  <div class="cover-modules">
+    <span class="cover-module-tag">📂 Categorías</span>
+    <span class="cover-module-tag">🥘 Platos y Productos</span>
+    <span class="cover-module-tag">⚠️ Alérgenos</span>
+    <span class="cover-module-tag">🎨 Configuración Visual</span>
+    <span class="cover-module-tag">📱 Vista del Cliente</span>
+    <span class="cover-module-tag">📷 Código QR</span>
+  </div>
+  <div class="cover-version">v2.0 · 2026 · quieromesa.com</div>
+</div>
+
+<div class="page-wrapper">
+
+<!-- TOC -->
+<div class="toc-page">
+  <h2 class="toc-title">Índice de Contenidos</h2>
+  <div class="toc-divider"></div>
+  <ul class="toc-list">
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">1</span><span class="toc-name">¿Qué es la Carta Digital?</span><span class="toc-dots"></span><span class="toc-page-num">3</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">2</span><span class="toc-name">Activación del Módulo</span><span class="toc-dots"></span><span class="toc-page-num">4</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">3</span><span class="toc-name">Gestión de Categorías</span><span class="toc-dots"></span><span class="toc-page-num">5</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">4</span><span class="toc-name">Gestión de Platos y Productos</span><span class="toc-dots"></span><span class="toc-page-num">7</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">5</span><span class="toc-name">Gestión de Alérgenos</span><span class="toc-dots"></span><span class="toc-page-num">11</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">6</span><span class="toc-name">Configuración Visual de la Carta</span><span class="toc-dots"></span><span class="toc-page-num">13</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">7</span><span class="toc-name">Vista del Cliente</span><span class="toc-dots"></span><span class="toc-page-num">15</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">8</span><span class="toc-name">Código QR de la Carta</span><span class="toc-dots"></span><span class="toc-page-num">17</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">9</span><span class="toc-name">Preguntas Frecuentes</span><span class="toc-dots"></span><span class="toc-page-num">19</span></div></li>
+  </ul>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 1</div>
+  <h1 class="chapter-title">¿Qué es la Carta Digital?</h1>
+  <p class="chapter-lead">Un menú interactivo accesible desde cualquier dispositivo mediante enlace web o código QR, siempre actualizado en tiempo real.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">1.1 Beneficios para su Restaurante</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:20px 0">
+      <div style="background:#FEF3C7;border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">⚡</div>
+        <div style="font-size:14px;font-weight:700;color:#92400E">Actualización</div>
+        <div style="font-size:12px;color:#B45309;margin-top:4px">Cambios en tiempo real. Sin reimprimir cartas.</div>
+      </div>
+      <div style="background:#D1FAE5;border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">📱</div>
+        <div style="font-size:14px;font-weight:700;color:#065F46">Sin app</div>
+        <div style="font-size:12px;color:#047857;margin-top:4px">El cliente escanea el QR y accede al instante.</div>
+      </div>
+      <div style="background:#DBEAFE;border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">⚖️</div>
+        <div style="font-size:14px;font-weight:700;color:#1E40AF">Legal</div>
+        <div style="font-size:12px;color:#2563EB;margin-top:4px">Alérgenos visibles según normativa europea.</div>
+      </div>
+    </div>
+
+    <ul class="bullets">
+      <li>Consulta de todos los platos con foto, descripción, precio y alérgenos.</li>
+      <li>Filtrado por categorías (entrantes, principales, postres, bebidas…).</li>
+      <li>Acceso desde la mesa escaneando el QR, sin descargar ninguna app.</li>
+      <li>Enlace directo al formulario de reserva desde la carta.</li>
+      <li>Soporte multiidioma para clientela internacional.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">1.2 Cómo Acceden los Clientes</h2>
+
+    <div style="display:flex;gap:20px;align-items:center;background:var(--bg);border-radius:12px;padding:20px;margin:16px 0">
+      <div style="text-align:center;flex:1">
+        <div style="font-size:48px;margin-bottom:8px">📷</div>
+        <div style="font-weight:700;font-size:14px">Código QR</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Escaneando el QR impreso en la mesa</div>
+      </div>
+      <div style="font-size:24px;color:var(--border)">|</div>
+      <div style="text-align:center;flex:1">
+        <div style="font-size:48px;margin-bottom:8px">🔗</div>
+        <div style="font-weight:700;font-size:14px">Enlace directo</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">quieromesa.com/client/menu/[restaurante]</div>
+      </div>
+      <div style="font-size:24px;color:var(--border)">|</div>
+      <div style="text-align:center;flex:1">
+        <div style="font-size:48px;margin-bottom:8px">📲</div>
+        <div style="font-weight:700;font-size:14px">Redes sociales</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Enlace en Instagram, Facebook o web</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 2</div>
+  <h1 class="chapter-title">Activación del Módulo</h1>
+  <p class="chapter-lead">Verifique que el módulo de Carta Digital está incluido en su plan de suscripción.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">2.1 Verificar la Activación</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda al panel del restaurante en <strong>quieromesa.com/restaurant</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Compruebe que el módulo <strong>Carta Digital</strong> aparece en el menú lateral izquierdo.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Si no lo ve, contacte con soporte para incluirlo en su plan de suscripción.</span></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.2 Configuración Inicial en 4 Pasos</h2>
+    <div class="ui-mockup">
+      <div class="ui-mockup-title">Orden de configuración recomendado</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span class="step-text"><strong>Carta Digital → Configuración</strong> — Logo, colores, imagen de portada y mensaje de bienvenida.</span></li>
+        <li><span class="step-num">2</span><span class="step-text"><strong>Carta Digital → Categorías</strong> — Crear las secciones (Entrantes, Carnes, Postres, Vinos…).</span></li>
+        <li><span class="step-num">3</span><span class="step-text"><strong>Carta Digital → Platos</strong> — Añadir cada plato con foto, descripción, precio y alérgenos.</span></li>
+        <li><span class="step-num">4</span><span class="step-text"><strong>Carta Digital → Código QR</strong> — Descargar e imprimir el QR para las mesas.</span></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 3</div>
+  <h1 class="chapter-title">Gestión de Categorías</h1>
+  <p class="chapter-lead">Las categorías organizan la carta en secciones. Créelas antes de añadir platos.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">3.1 Crear una Categoría</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Carta Digital → Categorías</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse <strong>+ Nueva Categoría</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Rellene los campos (ver tabla) y pulse <strong>Guardar</strong>.</span></li>
+    </ol>
+
+    <table class="data-table">
+      <thead><tr><th>Campo</th><th>Descripción</th><th>Ejemplos</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Nombre</strong></td><td>Título de la sección que ve el cliente</td><td>Entrantes, Carnes, Postres, Vinos</td></tr>
+        <tr><td><strong>Descripción</strong></td><td>Subtítulo opcional bajo el nombre</td><td>"Para compartir en mesa", "A la brasa"</td></tr>
+        <tr><td><strong>Imagen</strong></td><td>Foto representativa de la categoría (opcional pero recomendada)</td><td>Foto de entrantes, foto de carnes…</td></tr>
+        <tr><td><strong>Orden</strong></td><td>Posición en la carta (1 = aparece primero)</td><td>1, 2, 3…</td></tr>
+        <tr><td><strong>Activa</strong></td><td>Toggle para mostrar u ocultar la categoría sin eliminarla</td><td>Activo / Inactivo</td></tr>
+      </tbody>
+    </table>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant/carta-digital — Categorías</div>
+      </div>
+      <div class="screenshot-content" style="min-height:160px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px;width:120px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.06)">
+            <div style="font-size:24px;margin-bottom:6px">🥗</div>
+            <div style="font-weight:700;font-size:12px">Entrantes</div>
+            <div style="font-size:10px;color:#6b7280;margin-top:2px">8 platos</div>
+            <div style="background:#D1FAE5;color:#065F46;font-size:9px;font-weight:700;border-radius:10px;padding:2px 8px;margin-top:4px">Activa</div>
+          </div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px;width:120px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.06)">
+            <div style="font-size:24px;margin-bottom:6px">🥩</div>
+            <div style="font-weight:700;font-size:12px">Carnes</div>
+            <div style="font-size:10px;color:#6b7280;margin-top:2px">12 platos</div>
+            <div style="background:#D1FAE5;color:#065F46;font-size:9px;font-weight:700;border-radius:10px;padding:2px 8px;margin-top:4px">Activa</div>
+          </div>
+          <div style="background:#fff;border:2px dashed #e5e7eb;border-radius:10px;padding:12px;width:120px;text-align:center;opacity:0.5">
+            <div style="font-size:24px;margin-bottom:6px">🌞</div>
+            <div style="font-weight:700;font-size:12px">Menú Verano</div>
+            <div style="font-size:10px;color:#6b7280;margin-top:2px">4 platos</div>
+            <div style="background:#F3F4F6;color:#6b7280;font-size:9px;font-weight:700;border-radius:10px;padding:2px 8px;margin-top:4px">Inactiva</div>
+          </div>
+        </div>
+        <span class="screenshot-desc">Lista de categorías con estado activo/inactivo. La categoría "Menú Verano" está desactivada temporalmente.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3.2 Reordenar y Ocultar Categorías</h2>
+    <ul class="bullets">
+      <li><strong>Reordenar:</strong> Arrastre las filas de la lista o edite el campo "Orden" de cada categoría.</li>
+      <li><strong>Ocultar temporalmente:</strong> Desactive el toggle "Activa" (ej: carta de verano fuera de temporada). La categoría y todos sus platos dejan de aparecer para el cliente.</li>
+      <li><strong>Eliminar:</strong> Solo disponible si la categoría no tiene platos asignados.</li>
+    </ul>
+
+    <div class="callout highlight">
+      <span class="callout-icon">🌞</span>
+      <div class="callout-body">
+        <h4>Caso de uso: Menú del Día</h4>
+        <p>Cree una categoría "Menú del Día". Cada mañana, active la categoría y actualice sus platos. Al terminar el servicio del mediodía, desactívela. Los clientes solo la ven en el horario que desee.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 4</div>
+  <h1 class="chapter-title">Gestión de Platos y Productos</h1>
+  <p class="chapter-lead">Cree y gestione cada plato de su carta con toda la información necesaria para los clientes.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">4.1 Crear un Plato</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Carta Digital → Platos</strong> o entre en una categoría y pulse <strong>+ Añadir Plato</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Complete todos los campos relevantes (ver tabla a continuación).</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Pulse <strong>Guardar</strong>. El plato aparece inmediatamente en la carta digital.</span></li>
+    </ol>
+
+    <table class="data-table">
+      <thead><tr><th>Campo</th><th>Descripción</th><th style="text-align:center">Obligatorio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Nombre</strong></td><td>Nombre del plato tal como aparecerá en la carta</td><td class="check">✅</td></tr>
+        <tr><td><strong>Descripción</strong></td><td>Ingredientes, preparación o nota del chef</td><td class="check">—</td></tr>
+        <tr><td><strong>Precio</strong></td><td>Precio en euros (ej: 12.50)</td><td class="check">✅</td></tr>
+        <tr><td><strong>Categoría</strong></td><td>A qué sección pertenece el plato</td><td class="check">✅</td></tr>
+        <tr><td><strong>Imagen</strong></td><td>Foto del plato (mínimo 800×600 px, máximo 5 MB)</td><td class="check">—</td></tr>
+        <tr><td><strong>Alérgenos</strong></td><td>Selección múltiple de los 14 alérgenos presentes</td><td class="check">—</td></tr>
+        <tr><td><strong>Disponible</strong></td><td>Toggle para mostrar u ocultar el plato sin eliminar</td><td class="check">✅</td></tr>
+        <tr><td><strong>Destacado</strong></td><td>Aparece en la sección especial "Recomendaciones del Chef"</td><td class="check">—</td></tr>
+        <tr><td><strong>Etiquetas</strong></td><td>Etiquetas informativas: Vegano, Sin gluten, Picante, Nuevo…</td><td class="check">—</td></tr>
+        <tr><td><strong>Orden</strong></td><td>Posición del plato dentro de su categoría</td><td class="check">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4.2 Vista Previa de una Tarjeta de Plato</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0">
+      <div class="dish-card">
+        <div class="dish-card-img">🐙</div>
+        <div class="dish-card-body">
+          <div class="dish-card-name">Pulpo a feira</div>
+          <div class="dish-card-desc">Con pimentón de la Vera y aceite de oliva virgen</div>
+          <div class="dish-card-price">18,50 €</div>
+          <div class="dish-card-tags">
+            <span class="dish-tag">⭐ Estrella</span>
+          </div>
+        </div>
+      </div>
+      <div class="dish-card">
+        <div class="dish-card-img" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0)">🥗</div>
+        <div class="dish-card-body">
+          <div class="dish-card-name">Ensalada mixta</div>
+          <div class="dish-card-desc">Lechuga, tomate, cebolla y aceitunas</div>
+          <div class="dish-card-price">8,00 €</div>
+          <div class="dish-card-tags">
+            <span class="dish-tag" style="background:#D1FAE5;color:#065F46">🌱 Vegano</span>
+          </div>
+        </div>
+      </div>
+      <div class="dish-card" style="opacity:0.6">
+        <div class="dish-card-img" style="background:linear-gradient(135deg,#F3F4F6,#E5E7EB)">🍮</div>
+        <div class="dish-card-body">
+          <div class="dish-card-name">Tarta de queso</div>
+          <div class="dish-card-desc">Receta de la abuela con mermelada</div>
+          <div class="dish-card-price">6,50 €</div>
+          <div class="dish-card-tags">
+            <span class="dish-tag" style="background:#FEE2E2;color:#991B1B">❌ No disponible</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4.3 Ocultar un Plato Temporalmente</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Abra el plato desde la lista.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Desactive el toggle <strong>Disponible</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Guarde. El plato desaparece de la carta del cliente de inmediato.</span></li>
+    </ol>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body">
+        <h4>Ingrediente no disponible hoy</h4>
+        <p>Si el ingrediente principal está agotado, oculte el plato con un solo toggle. No hace falta eliminarlo; estará disponible de nuevo cuando lo reactive.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4.4 Platos Destacados — Recomendaciones del Chef</h2>
+    <p>Los platos con el toggle <strong>Destacado</strong> activado aparecen en una sección especial al inicio de la carta. Use esta opción para:</p>
+    <ul class="bullets">
+      <li>Impulsar los platos con mayor margen de beneficio.</li>
+      <li>Destacar los platos más representativos de su cocina.</li>
+      <li>Promocionar novedades de temporada.</li>
+    </ul>
+
+    <div class="callout highlight">
+      <span class="callout-icon">⭐</span>
+      <div class="callout-body">
+        <h4>Recomendación de uso</h4>
+        <p>Marque entre 3 y 6 platos como destacados. Si destaca demasiados, el efecto pierde impacto. Rote los destacados con las temporadas o según disponibilidad del mercado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4.5 Imágenes de Platos</h2>
+
+    <table class="data-table">
+      <thead><tr><th>Recomendación</th><th>Detalle</th></tr></thead>
+      <tbody>
+        <tr><td>Formato</td><td>Cuadrado (1:1) o 4:3. JPG o PNG.</td></tr>
+        <tr><td>Tamaño mínimo</td><td>800×600 píxeles para buena calidad en pantalla</td></tr>
+        <tr><td>Peso máximo</td><td>5 MB (el sistema las optimiza para carga rápida)</td></tr>
+        <tr><td>Fondo</td><td>Fondo neutro o tabla de madera. Evitar fondos muy cargados.</td></tr>
+        <tr><td>Iluminación</td><td>Luz natural o artificial difusa. Evitar sombras duras.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <span class="callout-icon">📸</span>
+      <div class="callout-body">
+        <h4>¿Por qué las imágenes importan?</h4>
+        <p>Los platos con foto generan un 30–40% más de interés visual que los que solo tienen texto. Invertir en buenas fotos de sus platos estrella tiene un retorno directo en pedidos y satisfacción del cliente.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 5</div>
+  <h1 class="chapter-title">Gestión de Alérgenos</h1>
+  <p class="chapter-lead">La normativa europea obliga a informar de los 14 alérgenos principales. El módulo facilita su gestión y cumplimiento legal.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">5.1 Los 14 Alérgenos Obligatorios</h2>
+    <div class="allergen-grid">
+      <div class="allergen-item"><div class="allergen-icon">🌾</div><div><strong>1. Gluten</strong> — Cereales con gluten (trigo, centeno, cebada…)</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🦀</div><div><strong>2. Crustáceos</strong> — Cangrejos, gambas, langostinos…</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🥚</div><div><strong>3. Huevos</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🐟</div><div><strong>4. Pescado</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🥜</div><div><strong>5. Cacahuetes</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🫘</div><div><strong>6. Soja</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🥛</div><div><strong>7. Leche</strong> — Incluida lactosa</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🌰</div><div><strong>8. Frutos de cáscara</strong> — Nueces, almendras, pistachos…</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🌿</div><div><strong>9. Apio</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🌱</div><div><strong>10. Mostaza</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🌰</div><div><strong>11. Sésamo</strong> — Granos de sésamo</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🍷</div><div><strong>12. Sulfitos</strong> — Dióxido de azufre y sulfitos (>10 mg/kg)</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🌼</div><div><strong>13. Altramuces</strong> — Y productos derivados</div></div>
+      <div class="allergen-item"><div class="allergen-icon">🦑</div><div><strong>14. Moluscos</strong> — Mejillones, pulpo, calamar…</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">5.2 Asignar Alérgenos a un Plato</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Abra o cree el plato desde <strong>Carta Digital → Platos</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">En la sección <strong>Alérgenos</strong>, marque las casillas de los alérgenos presentes en ese plato.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Guarde. Los iconos de alérgenos aparecen automáticamente en la carta del cliente.</span></li>
+    </ol>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body">
+        <h4>Aviso legal obligatorio</h4>
+        <p>La carta debe incluir una nota indicando que los clientes con alergias deben comunicarlo al personal para obtener información detallada y actualizada. El sistema incluye esta nota automáticamente al pie de la carta.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 6</div>
+  <h1 class="chapter-title">Configuración Visual de la Carta</h1>
+  <p class="chapter-lead">Personalice el aspecto de su carta digital para que refleje la identidad de su restaurante.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">6.1 Personalización de la Portada</h2>
+    <p>Acceda a <strong>Carta Digital → Configuración</strong> para personalizar:</p>
+
+    <table class="data-table">
+      <thead><tr><th>Elemento</th><th>Descripción</th><th>Recomendación</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Logo</strong></td><td>Aparece en la cabecera de la carta</td><td>Fondo transparente (PNG), al menos 200×200 px</td></tr>
+        <tr><td><strong>Imagen de portada</strong></td><td>Foto de fondo al abrir la carta</td><td>1200×400 px, escena del local o plato estrella</td></tr>
+        <tr><td><strong>Color principal</strong></td><td>Se aplica a botones, encabezados y elementos interactivos</td><td>Use su color corporativo en hexadecimal (#RRGGBB)</td></tr>
+        <tr><td><strong>Mensaje de bienvenida</strong></td><td>Texto que ve el cliente al abrir la carta</td><td>Máximo 150 caracteres. Amigable y representativo.</td></tr>
+        <tr><td><strong>Nombre y descripción</strong></td><td>Se muestran en la cabecera de la carta</td><td>Igual que en los datos del restaurante</td></tr>
+      </tbody>
+    </table>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/client/menu/[restaurante] — Portada</div>
+      </div>
+      <div class="screenshot-content" style="min-height:180px;background:linear-gradient(135deg,#1a1a2e,#16213e)">
+        <div style="width:100%;max-width:300px;text-align:left">
+          <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:16px;border:1px solid rgba(255,255,255,0.1)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="width:36px;height:36px;background:#F59E0B;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🍽️</div>
+              <div>
+                <div style="color:#fff;font-weight:700;font-size:14px">O Lar de Pereiras</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:11px">Cocina tradicional gallega</div>
+              </div>
+            </div>
+            <div style="color:rgba(255,255,255,0.7);font-size:11px">"Bienvenidos. Disfrute de nuestra cocina con productos locales y de temporada."</div>
+            <div style="display:flex;gap:6px;margin-top:12px;overflow:hidden">
+              <div style="background:#F59E0B;color:#fff;border-radius:16px;padding:4px 12px;font-size:10px;font-weight:700;white-space:nowrap">Entrantes</div>
+              <div style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border-radius:16px;padding:4px 12px;font-size:10px;font-weight:700;white-space:nowrap">Carnes</div>
+              <div style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border-radius:16px;padding:4px 12px;font-size:10px;font-weight:700;white-space:nowrap">Pescados</div>
+            </div>
+          </div>
+        </div>
+        <span class="screenshot-desc" style="color:rgba(255,255,255,0.5)">Vista de portada de la carta digital con logo, nombre, mensaje de bienvenida y selector de categorías</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">6.2 Carta Multiidioma</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Carta Digital → Idiomas</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Active los idiomas deseados (español, inglés, portugués, alemán, francés…).</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Traduzca los nombres y descripciones de cada categoría y plato.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Los clientes verán un selector de idioma en la carta para cambiar entre los disponibles.</span></li>
+    </ol>
+  </div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 7</div>
+  <h1 class="chapter-title">Vista del Cliente</h1>
+  <p class="chapter-lead">Así es la experiencia que vive su cliente al acceder a la carta digital desde su móvil.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">7.1 Estructura de la Carta</h2>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:0;margin:20px 0;max-width:500px">
+      <div style="display:flex;flex-direction:column;align-items:center;padding-right:16px">
+        <div style="width:2px;height:20px;background:#e5e7eb"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;flex-shrink:0"></div>
+        <div style="width:2px;flex:1;background:#e5e7eb;min-height:30px"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;flex-shrink:0"></div>
+        <div style="width:2px;flex:1;background:#e5e7eb;min-height:30px"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;flex-shrink:0"></div>
+        <div style="width:2px;flex:1;background:#e5e7eb;min-height:30px"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;flex-shrink:0"></div>
+        <div style="width:2px;flex:1;background:#e5e7eb;min-height:30px"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;flex-shrink:0"></div>
+        <div style="width:2px;height:20px;background:#e5e7eb"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding-top:20px">
+        <div style="background:#FEF3C7;border-radius:8px;padding:10px 14px"><strong>1. Portada</strong> — Logo, imagen de cabecera y nombre del restaurante</div>
+        <div style="background:#FEF3C7;border-radius:8px;padding:10px 14px"><strong>2. Selector de categorías</strong> — Barra horizontal deslizable con las secciones activas</div>
+        <div style="background:#FEF3C7;border-radius:8px;padding:10px 14px"><strong>3. Platos destacados</strong> — Sección especial "Recomendaciones del Chef"</div>
+        <div style="background:#FEF3C7;border-radius:8px;padding:10px 14px"><strong>4. Lista de platos</strong> — Foto, nombre, descripción, alérgenos, etiquetas y precio</div>
+        <div style="background:#FEF3C7;border-radius:8px;padding:10px 14px"><strong>5. Pie de carta</strong> — Nota de alérgenos, contacto y enlace a reservas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">7.2 Acciones del Cliente en la Carta</h2>
+
+    <table class="data-table">
+      <thead><tr><th>Acción</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Pulsar un plato</td><td>Ver la foto en tamaño completo, descripción completa y alérgenos detallados.</td></tr>
+        <tr><td>Filtrar por alérgeno</td><td>Mostrar solo los platos sin determinados alérgenos (si está activado).</td></tr>
+        <tr><td>Cambiar idioma</td><td>Selector de idioma si el multiidioma está activado.</td></tr>
+        <tr><td>Botón "Reservar"</td><td>Accede directamente al formulario de reserva del restaurante.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 8</div>
+  <h1 class="chapter-title">Código QR de la Carta</h1>
+  <p class="chapter-lead">Genere, descargue e imprima el código QR para que sus clientes accedan a la carta desde la mesa.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">8.1 Generar y Descargar el QR</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Carta Digital → Código QR</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">El sistema genera automáticamente un código QR único para su restaurante.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Pulse <strong>Descargar QR</strong> para obtener el archivo en alta resolución (PNG o SVG).</span></li>
+    </ol>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant/carta-digital — Código QR</div>
+      </div>
+      <div class="screenshot-content" style="min-height:200px;gap:16px">
+        <div style="background:#fff;border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.1);display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div style="width:100px;height:100px;background:repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 0 0 / 8px 8px;border:4px solid #000;border-radius:4px"></div>
+          <div style="font-weight:700;font-size:14px">Escanea para ver la carta</div>
+          <div style="font-size:11px;color:#9ca3af">quieromesa.com/client/menu/o-lar-de-pereiras</div>
+          <div style="display:flex;gap:8px">
+            <div style="background:#F59E0B;color:#fff;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700">⬇️ Descargar PNG</div>
+            <div style="background:#f3f4f6;color:#374151;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700">⬇️ Descargar SVG</div>
+          </div>
+        </div>
+        <span class="screenshot-desc">Código QR generado con botones de descarga en alta resolución</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">8.2 Dónde Imprimir el QR</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:24px;margin-bottom:8px">🏷️</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">Sobre de mesa</div>
+        <p style="font-size:12px;color:var(--text-muted);margin:0">Impreso en cartón o plastificado sobre cada mesa. La opción más habitual y duradera.</p>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:24px;margin-bottom:8px">📋</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">Mantel individual</div>
+        <p style="font-size:12px;color:var(--text-muted);margin:0">Incluido en el diseño del mantel de papel desechable o en el mantel de tela.</p>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:24px;margin-bottom:8px">🪧</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">Pizarra de entrada</div>
+        <p style="font-size:12px;color:var(--text-muted);margin:0">En la pizarra de la entrada junto al menú del día para que los clientes vean la carta antes de sentarse.</p>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:24px;margin-bottom:8px">📲</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">Redes sociales</div>
+        <p style="font-size:12px;color:var(--text-muted);margin:0">Comparta el enlace directo en Instagram bio, Facebook o la web del restaurante.</p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">♾️</span>
+      <div class="callout-body">
+        <h4>El QR es permanente</h4>
+        <p>El código QR y el enlace nunca cambian. Cuando actualice la carta (nuevos platos, precios, categorías), los cambios se reflejan automáticamente sin necesidad de imprimir un QR nuevo.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 9 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 9</div>
+  <h1 class="chapter-title">Preguntas Frecuentes</h1>
+  <p class="chapter-lead">Respuestas a las dudas más comunes sobre la gestión de la carta digital.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <div class="faq-item">
+      <div class="faq-q">¿Cuántos platos puede tener la carta?</div>
+      <p class="faq-a">No hay límite de platos ni de categorías. Puede crear tantas secciones y productos como necesite su restaurante.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Puedo tener distintas cartas para almuerzo y cena?</div>
+      <p class="faq-a">Sí. Cree categorías específicas para cada servicio y actívelas/desactívelas según el turno del día. Por ejemplo, la categoría "Menú del Día" visible solo en el servicio de mediodía.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Se puede usar la carta para hacer pedidos?</div>
+      <p class="faq-a">En la versión actual, la carta es de consulta. Los pedidos se realizan a través del personal del restaurante. La funcionalidad de pedidos digitales está disponible en el módulo Comandas.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Las imágenes son obligatorias?</div>
+      <p class="faq-a">No son obligatorias, pero se recomienda incluirlas. Los platos con foto generan un 30–40% más de interés visual. Priorice las fotos de sus platos más populares o más rentables.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿La carta funciona sin conexión a internet?</div>
+      <p class="faq-a">No. La carta digital requiere conexión a internet. Sin embargo, la carga es muy rápida (menos de 2 segundos en 4G) gracias a la optimización de imágenes del sistema.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Puedo añadir el menú del día diferente cada día?</div>
+      <p class="faq-a">Sí. Cree una categoría "Menú del Día" y actualice sus platos cada mañana. Active la categoría para el servicio de mediodía y desactívela por la tarde o noche.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Los cambios en la carta son inmediatos?</div>
+      <p class="faq-a">Sí. Cualquier cambio que realice en el panel (añadir platos, cambiar precios, ocultar categorías) se refleja de inmediato en la carta que ven los clientes. No hay necesidad de publicar ni de esperar.</p>
+    </div>
+
+    <div style="margin-top:40px;padding:24px;background:var(--primary-light);border-radius:12px;text-align:center">
+      <h3 style="color:var(--primary-dark);margin-bottom:8px">¿Necesita ayuda con la Carta Digital?</h3>
+      <p style="color:#B45309;margin:0">Contacte con nuestro equipo a través del botón 🎧 del panel de restaurante o escriba a <strong>soporte@quieromesa.com</strong></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

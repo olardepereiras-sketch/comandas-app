@@ -1,0 +1,26 @@
+{
+  "name": "comandas-backend",
+  "version": "1.0.0",
+  "description": "Backend standalone para el sistema de comandas",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:ts": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.11",
+    "@hono/trpc-server": "^0.3.4",
+    "@trpc/server": "^10.45.2",
+    "hono": "^4.6.3",
+    "pg": "^8.13.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

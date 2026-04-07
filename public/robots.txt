@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /client/restaurant/
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Instagram
+Allow: /
+
+Sitemap: https://quieromesa.com/sitemap.xml

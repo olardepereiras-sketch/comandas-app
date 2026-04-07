@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Gestión de Fianzas — QuieroMesa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --primary: #059669; --primary-light: #D1FAE5; --primary-dark: #047857;
+    --accent: #10B981; --warning: #F59E0B; --warning-light: #FEF3C7;
+    --danger: #EF4444; --danger-light: #FEE2E2; --info: #3B82F6; --info-light: #EFF6FF;
+    --text: #111827; --text-muted: #6B7280; --border: #E5E7EB; --bg: #F9FAFB; --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; color: var(--text); background: var(--white); line-height: 1.7; font-size: 14px; }
+  .cover {
+    min-height: 100vh; background: linear-gradient(135deg, #064E3B 0%, #059669 50%, #10B981 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px 40px; text-align: center; page-break-after: always;
+  }
+  .cover-logo { width: 80px; height: 80px; background: rgba(255,255,255,0.15); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 32px; border: 2px solid rgba(255,255,255,0.3); }
+  .cover-brand { font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+  .cover-title { font-size: 42px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 16px; }
+  .cover-subtitle { font-size: 18px; color: rgba(255,255,255,0.75); max-width: 500px; margin-bottom: 48px; }
+  .cover-modules { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 600px; }
+  .cover-module-tag { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .cover-version { margin-top: 60px; font-size: 12px; color: rgba(255,255,255,0.4); }
+  .page-wrapper { max-width: 860px; margin: 0 auto; padding: 40px 48px; }
+  .toc-page { page-break-after: always; padding: 48px 0; }
+  .toc-title { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+  .toc-divider { width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px; margin-bottom: 36px; }
+  .toc-list { list-style: none; }
+  .toc-chapter { border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .toc-chapter-link { display: flex; align-items: center; gap: 14px; padding: 12px 8px; text-decoration: none; color: var(--text); }
+  .toc-num { width: 28px; height: 28px; border-radius: 8px; background: var(--primary-light); color: var(--primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .toc-name { flex: 1; font-size: 15px; font-weight: 600; }
+  .toc-dots { flex: 1; border-bottom: 2px dotted var(--border); height: 1px; margin: 0 8px; }
+  .toc-page-num { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .chapter { page-break-before: always; padding-top: 32px; }
+  .chapter-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .chapter-title { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+  .chapter-lead { font-size: 16px; color: var(--text-muted); max-width: 640px; margin-bottom: 32px; line-height: 1.6; }
+  .chapter-divider { height: 3px; background: linear-gradient(90deg, var(--primary), var(--accent), transparent); border-radius: 2px; margin-bottom: 36px; }
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; }
+  p { margin-bottom: 12px; color: var(--text); }
+  .steps { list-style: none; margin-bottom: 16px; }
+  .steps li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
+  .steps li:last-child { border-bottom: none; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.6; }
+  .bullets { list-style: none; margin-bottom: 16px; }
+  .bullets li { padding: 6px 0 6px 20px; position: relative; font-size: 14px; line-height: 1.6; }
+  .bullets li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+  .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .data-table th { background: var(--primary); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+  .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: var(--bg); }
+  .callout { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 12px; }
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .callout-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .callout-body p { font-size: 13px; margin-bottom: 0; }
+  .callout.tip { background: var(--primary-light); border-left: 4px solid var(--primary); }
+  .callout.tip .callout-body h4 { color: #065F46; }
+  .callout.tip .callout-body p { color: #047857; }
+  .callout.warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .callout.warning .callout-body h4 { color: #92400E; }
+  .callout.warning .callout-body p { color: #B45309; }
+  .callout.info { background: var(--info-light); border-left: 4px solid var(--info); }
+  .callout.info .callout-body h4 { color: #1E40AF; }
+  .callout.info .callout-body p { color: #2563EB; }
+  .callout.danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .callout.danger .callout-body h4 { color: #991B1B; }
+  .callout.danger .callout-body p { color: #B91C1C; }
+  .screenshot { background: var(--bg); border: 2px dashed var(--border); border-radius: 12px; padding: 0; margin: 20px 0; overflow: hidden; }
+  .screenshot-bar { background: #E5E7EB; padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
+  .screenshot-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .screenshot-url { flex: 1; background: #fff; border-radius: 4px; padding: 3px 10px; font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+  .screenshot-content { padding: 20px 24px; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; }
+  .screenshot-label { font-size: 13px; font-weight: 600; color: #9CA3AF; }
+  .screenshot-desc { font-size: 11px; color: #D1D5DB; max-width: 400px; }
+  .ui-mockup { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .ui-mockup-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .ui-mockup-title::after { content: ''; flex: 1; height: 1px; background: var(--primary-light); }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-yellow { background: #FEF3C7; color: #92400E; }
+  .badge-blue { background: #DBEAFE; color: #1E40AF; }
+  .badge-gray { background: #F3F4F6; color: #374151; }
+  .badge-red { background: #FEE2E2; color: #991B1B; }
+  .badge-orange { background: #FEF3C7; color: #92400E; }
+  .flow-diagram { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 14px; }
+  .flow-connector { width: 24px; display: flex; justify-content: center; }
+  .flow-connector-line { width: 2px; flex: 1; background: var(--primary-light); min-height: 20px; }
+  .flow-node { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .flow-content { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; flex: 1; margin-bottom: 0; }
+  .flow-content h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .flow-content p { font-size: 12px; color: var(--text-muted); margin: 0; }
+  .flow-gap { height: 8px; }
+  @media print { body { font-size: 12px; } .cover { height: 100vh; } .chapter { page-break-before: always; } a { text-decoration: none; color: inherit; } .callout { break-inside: avoid; } table { break-inside: avoid; } @page { margin: 20mm; } }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(5,150,105,0.4); z-index: 100; display: flex; align-items: center; gap: 8px; }
+  .print-btn:hover { background: var(--primary-dark); }
+  @media print { .print-btn { display: none; } }
+  .faq-item { border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .faq-q { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .faq-a { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ Exportar PDF</button>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">💳</div>
+  <div class="cover-brand">QuieroMesa · Sistema de Gestión</div>
+  <h1 class="cover-title">Manual de Gestión<br>de Fianzas</h1>
+  <p class="cover-subtitle">Guía completa para configurar depósitos, gestionar cobros con Stripe y reducir el índice de no-shows</p>
+  <div class="cover-modules">
+    <span class="cover-module-tag">⚙️ Configuración de Fianzas</span>
+    <span class="cover-module-tag">👤 Flujo del Cliente</span>
+    <span class="cover-module-tag">📊 Panel de Gestión</span>
+    <span class="cover-module-tag">↩️ Devolución / Retención</span>
+    <span class="cover-module-tag">📈 Estadísticas</span>
+  </div>
+  <div class="cover-version">v2.0 · 2026 · quieromesa.com</div>
+</div>
+
+<div class="page-wrapper">
+
+<!-- TOC -->
+<div class="toc-page">
+  <h2 class="toc-title">Índice de Contenidos</h2>
+  <div class="toc-divider"></div>
+  <ul class="toc-list">
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">1</span><span class="toc-name">¿Qué son las Fianzas?</span><span class="toc-dots"></span><span class="toc-page-num">3</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">2</span><span class="toc-name">Activación del Módulo y Requisitos</span><span class="toc-dots"></span><span class="toc-page-num">4</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">3</span><span class="toc-name">Configuración de Fianzas</span><span class="toc-dots"></span><span class="toc-page-num">5</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">4</span><span class="toc-name">Flujo del Cliente</span><span class="toc-dots"></span><span class="toc-page-num">7</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">5</span><span class="toc-name">Panel de Gestión de Fianzas</span><span class="toc-dots"></span><span class="toc-page-num">9</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">6</span><span class="toc-name">Devolución y Retención de Fianzas</span><span class="toc-dots"></span><span class="toc-page-num">11</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">7</span><span class="toc-name">Informes y Estadísticas</span><span class="toc-dots"></span><span class="toc-page-num">13</span></div></li>
+    <li class="toc-chapter"><div class="toc-chapter-link"><span class="toc-num">8</span><span class="toc-name">Preguntas Frecuentes</span><span class="toc-dots"></span><span class="toc-page-num">14</span></div></li>
+  </ul>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 1</div>
+  <h1 class="chapter-title">¿Qué son las Fianzas?</h1>
+  <p class="chapter-lead">Las fianzas son depósitos económicos que el cliente abona al reservar como garantía. Se devuelven si acude a su reserva o cancela con antelación, y se retienen en caso de no-show o cancelación tardía.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">1.1 Concepto y Beneficios</h2>
+    <p>Implementar fianzas en su restaurante tiene un impacto directo y medible:</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:20px 0">
+      <div style="background:#D1FAE5;border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">📉</div>
+        <div style="font-size:22px;font-weight:800;color:#065F46">−60%</div>
+        <div style="font-size:12px;color:#047857;font-weight:600">Reducción de no-shows</div>
+      </div>
+      <div style="background:#DBEAFE;border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">⏱️</div>
+        <div style="font-size:22px;font-weight:800;color:#1E40AF">+90%</div>
+        <div style="font-size:12px;color:#2563EB;font-weight:600">Puntualidad clientes</div>
+      </div>
+      <div style="background:#FEF3C7;border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">💰</div>
+        <div style="font-size:22px;font-weight:800;color:#92400E">+€€</div>
+        <div style="font-size:12px;color:#B45309;font-weight:600">Ingresos garantizados</div>
+      </div>
+    </div>
+
+    <div class="ui-mockup">
+      <div class="ui-mockup-title">Cómo funciona en resumen</div>
+      <ul class="bullets">
+        <li>El cliente reserva y paga una señal (ej: 10 € por persona o importe fijo).</li>
+        <li>Stripe realiza una <strong>pre-autorización</strong> — el cargo no es definitivo hasta que el restaurante lo confirme.</li>
+        <li>Si el cliente acude o cancela con antelación → <strong>devolución automática</strong>.</li>
+        <li>Si no aparece o cancela tarde → <strong>retención automática o manual</strong> según la política configurada.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">1.2 Integración con Stripe</h2>
+    <p>El módulo de Fianzas está integrado con <strong>Stripe</strong>, la plataforma de pagos líder mundial. Stripe proporciona:</p>
+    <ul class="bullets">
+      <li>Cobro seguro mediante tarjeta de crédito/débito y Bizum.</li>
+      <li>Pre-autorización y captura diferida para proteger al cliente.</li>
+      <li>Devoluciones automatizadas en 5–10 días hábiles.</li>
+      <li>Cumplimiento PCI-DSS (ningún dato de tarjeta se almacena en su servidor).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 2</div>
+  <h1 class="chapter-title">Activación del Módulo y Requisitos</h1>
+  <p class="chapter-lead">Antes de empezar, asegúrese de tener los requisitos técnicos configurados.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">2.1 Verificar que el Módulo está Activo</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda al panel del restaurante.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Compruebe que el módulo <strong>Fianzas</strong> aparece activo en el menú lateral.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Si no lo ve, contacte con soporte para incluirlo en su plan.</span></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2.2 Requisitos Previos</h2>
+
+    <table class="data-table">
+      <thead><tr><th>Requisito</th><th>Descripción</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cuenta Stripe</strong></td><td>Cuenta activa y verificada en stripe.com</td><td><span class="badge badge-red">Obligatorio</span></td></tr>
+        <tr><td><strong>Clave secreta Stripe</strong></td><td>STRIPE_SECRET_KEY configurada en el servidor</td><td><span class="badge badge-red">Obligatorio</span></td></tr>
+        <tr><td><strong>Clave pública Stripe</strong></td><td>STRIPE_PUBLISHABLE_KEY configurada en el servidor</td><td><span class="badge badge-red">Obligatorio</span></td></tr>
+        <tr><td><strong>Webhook Stripe</strong></td><td>URL del sistema registrada en Stripe para confirmaciones de pago</td><td><span class="badge badge-red">Obligatorio</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body">
+        <h4>Configuración técnica del servidor</h4>
+        <p>Las claves de Stripe deben estar configuradas por el administrador del sistema en las variables de entorno del servidor. Contacte con soporte técnico si necesita ayuda con esta configuración.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 3</div>
+  <h1 class="chapter-title">Configuración de Fianzas</h1>
+  <p class="chapter-lead">Define las reglas de cobro, las condiciones de aplicación y la política de cancelación.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">3.1 Acceder a la Configuración</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Acceda a <strong>Fianzas</strong> en el menú lateral.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse la pestaña <strong>Configuración</strong>.</span></li>
+    </ol>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant/deposits</div>
+      </div>
+      <div class="screenshot-content" style="min-height:180px">
+        <div style="width:100%;max-width:420px">
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <div style="background:#059669;color:#fff;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:700">Gestión</div>
+            <div style="background:#f3f4f6;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:600;color:#6b7280">Configuración</div>
+            <div style="background:#f3f4f6;border-radius:8px;padding:6px 16px;font-size:12px;font-weight:600;color:#6b7280">Estadísticas</div>
+          </div>
+          <div style="background:#f9fafb;border-radius:8px;padding:12px;font-size:11px">
+            <div style="font-weight:700;margin-bottom:8px;color:#065F46">Configuración de Fianzas</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:8px">
+                <div style="font-size:10px;color:#6b7280">Tipo de fianza</div>
+                <div style="font-weight:600">Por comensal · 5€</div>
+              </div>
+              <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:8px">
+                <div style="font-size:10px;color:#6b7280">Mín. comensales</div>
+                <div style="font-weight:600">A partir de 4 pax</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="screenshot-desc">Panel de configuración de fianzas con las opciones principales</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3.2 Tipos de Fianza</h2>
+    <table class="data-table">
+      <thead><tr><th>Tipo</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Importe fijo</strong></td><td>El mismo importe para todas las reservas, independientemente del número de comensales</td><td>10 € por reserva</td></tr>
+        <tr><td><strong>Por comensal</strong></td><td>El importe se multiplica por el número de comensales de la reserva</td><td>5 € × 4 pax = 20 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3.3 Condiciones de Aplicación</h2>
+    <table class="data-table">
+      <thead><tr><th>Condición</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mínimo de comensales</strong></td><td>La fianza solo se exige a partir de X comensales (ej: solo para grupos de 6 o más personas)</td></tr>
+        <tr><td><strong>Turnos con fianza</strong></td><td>Active la fianza solo para determinados turnos (ej: solo las cenas del fin de semana)</td></tr>
+        <tr><td><strong>Fechas especiales</strong></td><td>Active la fianza automáticamente en fechas configuradas como excepciones (San Valentín, Nochevieja…)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3.4 Política de Cancelación</h2>
+    <p>Define cuándo y cuánto se retiene al cliente si cancela:</p>
+
+    <div class="ui-mockup">
+      <div class="ui-mockup-title">Ejemplo de política de cancelación</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#D1FAE5;border-radius:8px">
+          <span style="font-size:20px">✅</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:#065F46">Cancelación gratuita: más de 24h antes</div>
+            <div style="font-size:12px;color:#047857">Devolución del 100% de la fianza</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#FEF3C7;border-radius:8px">
+          <span style="font-size:20px">⚠️</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:#92400E">Cancelación tardía: menos de 24h</div>
+            <div style="font-size:12px;color:#B45309">Retención del 50% de la fianza</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#FEE2E2;border-radius:8px">
+          <span style="font-size:20px">❌</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:#991B1B">No-show (sin avisar)</div>
+            <div style="font-size:12px;color:#B91C1C">Retención del 100% de la fianza</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 4</div>
+  <h1 class="chapter-title">Flujo del Cliente</h1>
+  <p class="chapter-lead">Cómo vive el proceso de fianza el cliente, desde la reserva hasta la devolución o retención.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">4.1 Proceso Completo de Reserva con Fianza</h2>
+
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div style="display:flex;flex-direction:column;align-items:center;width:24px">
+          <div class="flow-node">1</div>
+          <div class="flow-connector-line"></div>
+        </div>
+        <div class="flow-content" style="margin-bottom:8px">
+          <h4>Cliente accede a la web del restaurante</h4>
+          <p>quieromesa.com/client/[su-restaurante]</p>
+        </div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-step">
+        <div style="display:flex;flex-direction:column;align-items:center;width:24px">
+          <div class="flow-node">2</div>
+          <div class="flow-connector-line"></div>
+        </div>
+        <div class="flow-content" style="margin-bottom:8px">
+          <h4>Selecciona fecha, hora, comensales y ubicación</h4>
+          <p>Si se cumplen las condiciones de fianza, el sistema lo indica</p>
+        </div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-step">
+        <div style="display:flex;flex-direction:column;align-items:center;width:24px">
+          <div class="flow-node">3</div>
+          <div class="flow-connector-line"></div>
+        </div>
+        <div class="flow-content" style="margin-bottom:8px">
+          <h4>Aviso de fianza</h4>
+          <p>"Esta reserva requiere una señal de X € para garantizar su plaza."</p>
+        </div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-step">
+        <div style="display:flex;flex-direction:column;align-items:center;width:24px">
+          <div class="flow-node">4</div>
+          <div class="flow-connector-line"></div>
+        </div>
+        <div class="flow-content" style="margin-bottom:8px">
+          <h4>Cliente introduce datos de tarjeta (Stripe)</h4>
+          <p>Pasarela de pago segura. Se realiza pre-autorización (no cargo definitivo)</p>
+        </div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-step">
+        <div style="display:flex;flex-direction:column;align-items:center;width:24px">
+          <div class="flow-node">5</div>
+          <div class="flow-connector-line"></div>
+        </div>
+        <div class="flow-content" style="margin-bottom:8px">
+          <h4>Reserva confirmada automáticamente</h4>
+          <p>El cliente recibe WhatsApp con detalles de la reserva, importe de la fianza y política de cancelación</p>
+        </div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-step">
+        <div style="display:flex;flex-direction:column;align-items:center;width:24px">
+          <div class="flow-node" style="background:#F59E0B">?</div>
+        </div>
+        <div class="flow-content" style="background:#FEF9EE">
+          <h4>Dos posibles finales</h4>
+          <p>✅ Cliente acude o cancela a tiempo → <strong>devolución automática</strong> &nbsp;|&nbsp; ❌ No-show o cancelación tardía → <strong>retención</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4.2 Cancelación por el Cliente desde su Token</h2>
+    <p>El cliente puede cancelar desde el enlace de su token de reserva (recibido por WhatsApp):</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0">
+      <div style="background:#D1FAE5;border:1px solid #10B981;border-radius:10px;padding:16px">
+        <div style="font-weight:700;color:#065F46;margin-bottom:8px">✅ Dentro del plazo gratuito</div>
+        <p style="font-size:13px;color:#047857;margin:0">La fianza se devuelve automáticamente. El cliente verá un mensaje de confirmación de devolución. El reembolso tarda 5–10 días hábiles según el banco.</p>
+      </div>
+      <div style="background:#FEE2E2;border:1px solid #EF4444;border-radius:10px;padding:16px">
+        <div style="font-weight:700;color:#991B1B;margin-bottom:8px">❌ Fuera del plazo</div>
+        <p style="font-size:13px;color:#B91C1C;margin:0">Se aplica la política de retención configurada. El cliente es informado del importe retenido antes de confirmar la cancelación.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 5</div>
+  <h1 class="chapter-title">Panel de Gestión de Fianzas</h1>
+  <p class="chapter-lead">Visualice y gestione todas las fianzas activas, cobradas, devueltas y retenidas.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">5.1 Vista de la Lista de Fianzas</h2>
+
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#FC5753"></div>
+        <div class="screenshot-dot" style="background:#FDBC40"></div>
+        <div class="screenshot-dot" style="background:#33C748"></div>
+        <div class="screenshot-url">quieromesa.com/restaurant/deposits — Gestión</div>
+      </div>
+      <div class="screenshot-content" style="min-height:200px;align-items:stretch;padding:16px">
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead>
+            <tr style="background:#059669;color:#fff">
+              <th style="padding:8px;text-align:left">Cliente</th>
+              <th style="padding:8px;text-align:left">Reserva</th>
+              <th style="padding:8px;text-align:left">Importe</th>
+              <th style="padding:8px;text-align:left">Estado</th>
+              <th style="padding:8px;text-align:left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #e5e7eb">
+              <td style="padding:8px">Ana García<br><span style="color:#9ca3af">+34 600 123 456</span></td>
+              <td style="padding:8px">14/03/2026 21:00<br><span style="color:#9ca3af">4 pax</span></td>
+              <td style="padding:8px;font-weight:700">20,00 €</td>
+              <td style="padding:8px"><span style="background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Cobrada</span></td>
+              <td style="padding:8px"><span style="color:#059669;cursor:pointer;font-weight:600">Devolver</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid #e5e7eb;background:#f9fafb">
+              <td style="padding:8px">Luis Pérez<br><span style="color:#9ca3af">+34 611 987 654</span></td>
+              <td style="padding:8px">15/03/2026 14:00<br><span style="color:#9ca3af">6 pax</span></td>
+              <td style="padding:8px;font-weight:700">30,00 €</td>
+              <td style="padding:8px"><span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Pendiente</span></td>
+              <td style="padding:8px"><span style="color:#F59E0B;cursor:pointer;font-weight:600">Retener</span></td>
+            </tr>
+            <tr>
+              <td style="padding:8px">Marta Ruiz<br><span style="color:#9ca3af">+34 699 445 223</span></td>
+              <td style="padding:8px">10/03/2026 20:30<br><span style="color:#9ca3af">2 pax</span></td>
+              <td style="padding:8px;font-weight:700">10,00 €</td>
+              <td style="padding:8px"><span style="background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Devuelta</span></td>
+              <td style="padding:8px;color:#9ca3af">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">5.2 Estados de una Fianza</h2>
+    <table class="data-table">
+      <thead><tr><th>Estado</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>El pago está pre-autorizado pero aún no capturado definitivamente.</td></tr>
+        <tr><td><span class="badge badge-green">Cobrada</span></td><td>El importe ha sido capturado en la tarjeta del cliente.</td></tr>
+        <tr><td><span class="badge badge-blue">Devuelta</span></td><td>Se ha procesado el reembolso al cliente (5–10 días hábiles).</td></tr>
+        <tr><td><span class="badge badge-red">Retenida</span></td><td>El importe ha quedado en el restaurante (no-show o cancelación tardía).</td></tr>
+        <tr><td><span class="badge badge-gray">Fallida</span></td><td>El pago no pudo completarse (tarjeta rechazada, fondos insuficientes, etc.).</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 6</div>
+  <h1 class="chapter-title">Devolución y Retención de Fianzas</h1>
+  <p class="chapter-lead">Gestione manualmente las fianzas cuando el proceso automático no sea suficiente.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">6.1 Devolución Manual</h2>
+    <p>Para devolver una fianza de forma manual (ej: por causa mayor, error en la reserva):</p>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Localice la fianza en el panel de gestión.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse el botón <strong>Devolver fianza</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Confirme la acción en el diálogo emergente.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Stripe procesa el reembolso. El cliente lo recibirá en <strong>5–10 días hábiles</strong> según su banco.</span></li>
+    </ol>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body">
+        <h4>El cliente recibe notificación automática</h4>
+        <p>Al procesar una devolución, el sistema envía automáticamente un WhatsApp al cliente informándole del reembolso.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">6.2 Retención Manual</h2>
+    <p>Si el cliente no se presenta y el sistema no lo detectó automáticamente:</p>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Localice la fianza en el panel de gestión.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">Pulse el botón <strong>Retener fianza</strong>.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Seleccione el <strong>motivo</strong> (no-show, cancelación tardía, daños, etc.).</span></li>
+      <li><span class="step-num">4</span><span class="step-text">Confirme. El importe queda capturado definitivamente en favor del restaurante.</span></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">6.3 Retención Automática por No-Show</h2>
+    <p>Si tiene activado el registro automático de no-shows, el proceso es:</p>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span class="step-text">Desde el <strong>Planning</strong> o <strong>Reservas Pro</strong>, marque la reserva como <strong>No presentado</strong>.</span></li>
+      <li><span class="step-num">2</span><span class="step-text">El sistema detecta automáticamente si tiene fianza asociada.</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Aplica la retención según la política configurada.</span></li>
+      <li><span class="step-num">4</span><span class="step-text">El cliente recibe una notificación por WhatsApp informándole de la retención.</span></li>
+    </ol>
+
+    <div class="callout danger">
+      <span class="callout-icon">❗</span>
+      <div class="callout-body">
+        <h4>Plazo para retener una fianza</h4>
+        <p>Las pre-autorizaciones de Stripe tienen un plazo máximo de 7 días. Si no captura el importe dentro de ese plazo, la autorización caduca automáticamente y el cliente recupera el dinero. Procese las retenciones con rapidez.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 7</div>
+  <h1 class="chapter-title">Informes y Estadísticas</h1>
+  <p class="chapter-lead">Analice el impacto del sistema de fianzas en su negocio.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <h2 class="section-title">7.1 Métricas Disponibles</h2>
+    <p>Acceda a <strong>Fianzas → Estadísticas</strong> para consultar:</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0">
+      <div style="background:#D1FAE5;border-radius:10px;padding:16px">
+        <div style="font-size:11px;font-weight:700;color:#065F46;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total cobrado</div>
+        <div style="font-size:28px;font-weight:800;color:#059669">€ 1.240</div>
+        <div style="font-size:11px;color:#047857">Este mes</div>
+      </div>
+      <div style="background:#DBEAFE;border-radius:10px;padding:16px">
+        <div style="font-size:11px;font-weight:700;color:#1E40AF;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total devuelto</div>
+        <div style="font-size:28px;font-weight:800;color:#3B82F6">€ 980</div>
+        <div style="font-size:11px;color:#2563EB">Este mes</div>
+      </div>
+      <div style="background:#FEF3C7;border-radius:10px;padding:16px">
+        <div style="font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total retenido</div>
+        <div style="font-size:28px;font-weight:800;color:#F59E0B">€ 260</div>
+        <div style="font-size:11px;color:#B45309">No-shows y cancelaciones tardías</div>
+      </div>
+      <div style="background:#FEE2E2;border-radius:10px;padding:16px">
+        <div style="font-size:11px;font-weight:700;color:#991B1B;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Tasa no-show</div>
+        <div style="font-size:28px;font-weight:800;color:#EF4444">4,2%</div>
+        <div style="font-size:11px;color:#B91C1C">vs 18% sin fianza</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Métrica</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Total cobrado</td><td>Suma de todas las fianzas capturadas en el período seleccionado</td></tr>
+        <tr><td>Total devuelto</td><td>Suma de todos los reembolsos procesados</td></tr>
+        <tr><td>Total retenido</td><td>Suma de las fianzas retenidas por no-shows y cancelaciones tardías</td></tr>
+        <tr><td>Tasa de no-show con fianza</td><td>Porcentaje de reservas con fianza que no se presentaron</td></tr>
+        <tr><td>Tasa de no-show sin fianza</td><td>Para comparar el efecto del módulo de fianzas</td></tr>
+        <tr><td>Fianzas pendientes</td><td>Fianzas pre-autorizadas aún sin capturar ni devolver</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div class="chapter">
+  <div class="chapter-tag">📌 Capítulo 8</div>
+  <h1 class="chapter-title">Preguntas Frecuentes</h1>
+  <p class="chapter-lead">Respuestas a las dudas más habituales sobre el módulo de fianzas.</p>
+  <div class="chapter-divider"></div>
+
+  <div class="section">
+    <div class="faq-item">
+      <div class="faq-q">¿El cliente puede reservar sin pagar la fianza?</div>
+      <p class="faq-a">No. Si la fianza es obligatoria para esa reserva, el proceso de pago se completa antes de confirmarla. Si el cliente cierra la página sin pagar, la reserva queda en estado pendiente de pago y expira automáticamente.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Qué pasa si la tarjeta del cliente es rechazada?</div>
+      <p class="faq-a">El sistema informa al cliente del error y le permite intentar con otra tarjeta. La reserva no se confirma hasta que el pago sea exitoso.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Puedo configurar fianza solo para grupos grandes?</div>
+      <p class="faq-a">Sí. En la configuración puede establecer un mínimo de comensales a partir del cual se exige fianza (ej: solo para reservas de 8 o más personas).</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Las fianzas tienen comisión?</div>
+      <p class="faq-a">Stripe aplica sus tarifas estándar de procesamiento de pagos. Consulte la tarifa vigente en stripe.com/pricing. Las devoluciones también pueden tener comisión según su plan de Stripe.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Puedo desactivar las fianzas temporalmente?</div>
+      <p class="faq-a">Sí. Desde Fianzas → Configuración puede desactivar el módulo completo con un toggle sin perder la configuración guardada.</p>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Las fianzas son legales en España?</div>
+      <p class="faq-a">Sí, con condiciones. Debe informar claramente al cliente de la política de cancelación antes de cobrar la fianza (el sistema lo hace automáticamente). Consulte con su asesor legal para adaptar la política a la normativa de consumidores de su comunidad autónoma.</p>
+    </div>
+
+    <div class="callout warning" style="margin-top:24px">
+      <span class="callout-icon">⚖️</span>
+      <div class="callout-body">
+        <h4>Aviso legal</h4>
+        <p>Las fianzas y depósitos deben gestionarse conforme a la normativa de consumidores vigente en su territorio. Consulte con su asesor legal si tiene dudas sobre la política de retención aplicable en su caso concreto.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;padding:24px;background:var(--primary-light);border-radius:12px;text-align:center">
+    <h3 style="color:var(--primary);margin-bottom:8px">¿Necesita soporte?</h3>
+    <p style="color:#047857;margin:0">Para incidencias con pagos o devoluciones urgentes, contacte a través del botón 🎧 del panel o escriba a <strong>soporte@quieromesa.com</strong></p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

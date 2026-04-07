@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "🔍 Monitor en Tiempo Real - DELETE y CANCEL"
+echo "════════════════════════════════════════════════════════════════"
+echo ""
+echo "Este monitor mostrará:"
+echo "  • Peticiones HTTP que lleguen al backend"
+echo "  • Intentos de DELETE desde el frontend"
+echo "  • Intentos de CANCEL desde el frontend"
+echo ""
+echo "⚠️  Deja esta terminal abierta y en otra:"
+echo "   1. Abre http://200.234.236.133/admin/users"
+echo "   2. Intenta eliminar un usuario"
+echo "   3. Los logs aparecerán aquí automáticamente"
+echo ""
+echo "Para detener: Ctrl+C"
+echo "════════════════════════════════════════════════════════════════"
+echo ""
+
+tail -f /var/www/reservamesa/backend.log | grep --line-buffered -E "(DELETE|CANCEL|🔵|✅|❌|tRPC Request: POST|Error)"

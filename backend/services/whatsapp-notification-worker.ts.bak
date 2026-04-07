@@ -1,0 +1,211 @@
+import { Pool } from 'pg';
+import { sendWhatsAppViaRestaurant } from './whatsapp-web-manager';
+
+export class WhatsAppNotificationWorker {
+  private pool: Pool;
+  private isRunning = false;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
+
+  constructor(pool: Pool) {
+    this.pool = pool;
+  }
+
+  async start() {
+    if (this.isRunning) {
+      console.log('[WhatsApp Worker] Ya está en ejecución');
+      return;
+    }
+
+    this.isRunning = true;
+    console.log('[WhatsApp Worker] 🚀 Iniciando worker de notificaciones...');
+
+    await this.cleanOldNotifications();
+    
+    this.intervalId = setInterval(async () => {
+      await this.processNotifications();
+      await this.cleanOldNotifications();
+    }, 5 * 1000);
+
+    await this.processNotifications();
+  }
+
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    this.isRunning = false;
+    console.log('[WhatsApp Worker] ⏹️ Worker detenido');
+  }
+
+  private async cleanOldNotifications() {
+    try {
+      // Eliminar notificaciones enviadas hace más de 7 días
+      const sentResult = await this.pool.query(
+        `DELETE FROM whatsapp_notifications 
+         WHERE status = 'sent' 
+         AND sent_at < NOW() - INTERVAL '7 days'
+         RETURNING id`
+      );
+
+      // Eliminar notificaciones fallidas hace más de 24 horas
+      const failedResult = await this.pool.query(
+        `DELETE FROM whatsapp_notifications 
+         WHERE status = 'failed' 
+         AND last_attempt_at < NOW() - INTERVAL '24 hours'
+         RETURNING id`
+      );
+
+      const totalDeleted = (sentResult.rowCount || 0) + (failedResult.rowCount || 0);
+      if (totalDeleted > 0) {
+        console.log(`[WhatsApp Worker] 🗑️ Eliminadas ${totalDeleted} notificaciones antiguas`);
+      }
+    } catch (error) {
+      console.error('[WhatsApp Worker] Error limpiando notificaciones antiguas:', error);
+    }
+  }
+
+  private async processNotifications() {
+    const client = await this.pool.connect();
+    try {
+      const now = new Date();
+      
+      await client.query('BEGIN');
+      
+      // Usar FOR UPDATE SKIP LOCKED para evitar procesamiento concurrente
+      const result = await client.query(
+        `SELECT n.*, r.status as reservation_status
+         FROM whatsapp_notifications n
+         LEFT JOIN reservations r ON n.reservation_id = r.id
+         WHERE n.status = 'pending' 
+         AND n.scheduled_for <= $1
+         ORDER BY n.scheduled_for ASC
+         LIMIT 10
+         FOR UPDATE OF n SKIP LOCKED`,
+        [now]
+      );
+
+      if (result.rows.length === 0) {
+        await client.query('COMMIT');
+        return;
+      }
+
+      console.log(`[WhatsApp Worker] 📨 Procesando ${result.rows.length} notificaciones pendientes...`);
+
+      for (const notification of result.rows) {
+        if (notification.reservation_status === 'cancelled') {
+          console.log(`[WhatsApp Worker] ⏭️ Omitiendo notificación ${notification.id} - reserva cancelada`);
+          await client.query(
+            'DELETE FROM whatsapp_notifications WHERE id = $1',
+            [notification.id]
+          );
+          continue;
+        }
+
+        await this.sendNotification(notification, client);
+      }
+      
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      console.error('[WhatsApp Worker] Error procesando notificaciones:', error);
+    } finally {
+      client.release();
+    }
+  }
+
+  private async sendNotification(notification: any, client: any) {
+    try {
+      console.log(`[WhatsApp Worker] 📤 Enviando ${notification.notification_type} a ${notification.recipient_name} (${notification.recipient_phone})`);
+
+      // Marcar como processing para evitar duplicados
+      const updateResult = await client.query(
+        `UPDATE whatsapp_notifications 
+         SET status = 'processing', attempts = attempts + 1, last_attempt_at = NOW()
+         WHERE id = $1 AND status = 'pending'
+         RETURNING id`,
+        [notification.id]
+      );
+
+      // Si no se actualizó, ya está siendo procesado por otra instancia
+      if (updateResult.rowCount === 0) {
+        console.log(`[WhatsApp Worker] ⏭️ Notificación ${notification.id} ya está siendo procesada`);
+        return;
+      }
+
+      // Intentar enviar con timeout de 30 segundos
+      const result = await Promise.race([
+        sendWhatsAppViaRestaurant(
+          notification.restaurant_id,
+          notification.recipient_phone,
+          notification.message
+        ),
+        new Promise<{ success: boolean; error?: string }>((resolve) => 
+          setTimeout(() => resolve({ success: false, error: 'Timeout: sesión no lista después de 30s' }), 30000)
+        )
+      ]);
+
+      if (result.success) {
+        await client.query(
+          `UPDATE whatsapp_notifications 
+           SET status = 'sent', sent_at = NOW()
+           WHERE id = $1`,
+          [notification.id]
+        );
+        console.log(`[WhatsApp Worker] ✅ Notificación ${notification.id} enviada exitosamente`);
+      } else {
+        const maxAttempts = 5;
+        const currentAttempt = notification.attempts + 1;
+        
+        if (currentAttempt >= maxAttempts) {
+          await client.query(
+            `UPDATE whatsapp_notifications 
+             SET status = 'failed', error_message = $2
+             WHERE id = $1`,
+            [notification.id, result.error || 'Error desconocido']
+          );
+          console.log(`[WhatsApp Worker] ❌ Notificación ${notification.id} marcada como fallida después de ${currentAttempt} intentos`);
+        } else {
+          // Reintento exponencial: 30s, 1min, 2min, 5min
+          const retryDelays = [30, 60, 120, 300];
+          const delaySeconds = retryDelays[Math.min(currentAttempt - 1, retryDelays.length - 1)];
+          
+          await client.query(
+            `UPDATE whatsapp_notifications 
+             SET status = 'pending', error_message = $2, scheduled_for = NOW() + INTERVAL '${delaySeconds} seconds'
+             WHERE id = $1`,
+            [notification.id, result.error || 'Error desconocido']
+          );
+          console.log(`[WhatsApp Worker] 🔄 Notificación ${notification.id} reintento ${currentAttempt}/${maxAttempts} en ${delaySeconds}s`);
+        }
+      }
+    } catch (error: any) {
+      console.error(`[WhatsApp Worker] Error enviando notificación ${notification.id}:`, error);
+      
+      // Volver a pending en caso de error para reintentar
+      await client.query(
+        `UPDATE whatsapp_notifications 
+         SET status = 'pending', error_message = $2, scheduled_for = NOW() + INTERVAL '30 seconds'
+         WHERE id = $1`,
+        [notification.id, error.message || 'Error desconocido']
+      );
+    }
+  }
+}
+
+let workerInstance: WhatsAppNotificationWorker | null = null;
+
+export function startWhatsAppWorker(pool: Pool) {
+  if (!workerInstance) {
+    workerInstance = new WhatsAppNotificationWorker(pool);
+    workerInstance.start();
+  }
+  return workerInstance;
+}
+
+export function stopWhatsAppWorker() {
+  if (workerInstance) {
+    workerInstance.stop();
+    workerInstance = null;
+  }
+}
